@@ -7,6 +7,9 @@
 - Normal/signed profile enforcement remains intact; two explicit unsigned features are
   required. Added regression checks and retained the failed run's complete evidence.
 - Infrastructure suite passes locally (13 tests); the earlier GitHub run passed 11 tests.
+- Implemented an isolated Swift/Foundation Zalgo-filter adaptation with preserved UTF-16
+  positions and attributed runs. All 10 native XCTest cases passed on macOS/Swift 6.4
+  in run 45711409372; integration into the iOS client remains pending the baseline gate.
 
 ## Unreleased — 2026-11-25
 

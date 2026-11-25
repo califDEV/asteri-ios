@@ -1,0 +1,10 @@
+{
+  "filterZalgo": {
+    "description": "Display sanitation of excessive combining marks and bidi controls; preserves UTF-16 ranges and attributed runs",
+    "analog": "[AsteriText Swift/Foundation prototype](../prototypes/AsteriText/Sources/AsteriText/ZalgoFilter.swift)",
+    "plan": "Integrate at presentation-only iOS seams with persistent setting after a verified base build; check displayed frames",
+    "implementation": "Native prototype implemented; app integration pending",
+    "testing": "[10 native macOS tests passed on Swift 6.4](https://github.com/califDEV/asteri-ios/actions/runs/45711409372); source 88ed8ba542",
+    "limitations": "iOS app/device integration, OS Unicode-category differences, visual and performance checks pending"
+  }
+}

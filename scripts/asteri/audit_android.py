@@ -91,14 +91,16 @@ def source_link(commit, path, line=None):
     return f'https://github.com/exteraSquad/exteraGram/blob/{commit}/{path}' + (f'#L{line}' if line else '')
 
 
-def matrix(data):
-    lines = ['# Feature matrix — source discovery, port not yet implemented', '',
+def matrix(data, statuses=None):
+    statuses = statuses or {}
+    lines = ['# Feature matrix — source discovery and native prototypes', '',
              f'Android pin: `{data["android_commit"]}`. Official comparison: `{data["official_commit"]}`.', '',
              'This reproducible inventory covers delegated preferences in ExteraConfig, AiConfig, DebugConfig',
              'and PillStackConfig. A source reference',
              'may be an import, UI binding or behavior; it is not proof that the behavior was audited end to end.',
              'Additional subsystems and non-preference functions are tracked in ANDROID_ANALYSIS.md.',
-             'Phase 2 remains in progress. No row is claimed as an implemented iOS port.', '',
+             'Phase 2 remains in progress. Native prototype results are recorded separately from app integration.',
+             'No row is claimed as a completed, device-tested iOS feature port.', '',
              '| Feature / key | Description | Android source | Dependencies / source references | Telegram-iOS analog | Port plan | Implementation | Testing | iOS limitations |',
              '|---|---|---|---|---|---|---|---|---|']
     candidates = {
@@ -115,8 +117,15 @@ def matrix(data):
                          for r in pref['references'][:3]) or 'No external lexical reference found'
         desc = f'{pref["group"]}; persisted {pref["type"]}'
         analog = candidates.get(pref['group'], 'Requires per-feature iOS mapping') + ' (candidate, unverified)'
+        status = statuses.get(pref['name'], {})
+        desc = status.get('description', desc)
+        analog = status.get('analog', analog)
+        plan = status.get('plan', 'Audit consumer logic, implement native behavior after baseline, add behavior tests')
+        implementation = status.get('implementation', 'Discovered; not ported')
+        testing = status.get('testing', 'Not run on iOS')
+        limitations = status.get('limitations', 'Requires individual platform assessment')
         label = Path(pref['source']).name
-        lines.append(f'| `{pref["name"]}` | {desc} | [{label}:{pref["line"]}]({source_link(data["android_commit"], pref["source"], pref["line"])}) | {refs} | {analog} | Audit consumer logic, implement native behavior after baseline, add behavior tests | Discovered; not ported | Not run on iOS | Requires individual platform assessment |')
+        lines.append(f'| `{pref["name"]}` | {desc} | [{label}:{pref["line"]}]({source_link(data["android_commit"], pref["source"], pref["line"])}) | {refs} | {analog} | {plan} | {implementation} | {testing} | {limitations} |')
     return '\n'.join(lines) + '\n'
 
 
@@ -130,7 +139,9 @@ if __name__ == '__main__':
     directory = args.docs / 'audit'
     directory.mkdir(parents=True, exist_ok=True)
     (directory / 'android-inventory.json').write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
-    (args.docs / 'FEATURE_MATRIX.md').write_text(matrix(data), encoding='utf-8')
+    status_path = args.docs / 'audit/port-status.json'
+    statuses = json.loads(status_path.read_text(encoding='utf-8')) if status_path.exists() else {}
+    (args.docs / 'FEATURE_MATRIX.md').write_text(matrix(data, statuses), encoding='utf-8')
     print(json.dumps({'preferences': len(data['preferences']), 'custom_source_files': len(data['custom_source_files']),
                       'sdk_modules': len(data['sdk_modules']), 'preferences_by_source': data['preferences_by_source'],
                       'changes': data['changes_by_type']}, indent=2))

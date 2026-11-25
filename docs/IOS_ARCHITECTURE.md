@@ -1,6 +1,8 @@
 # Native iOS architecture
 
 Status: baseline preparation. No custom application module has been integrated yet.
+`prototypes/AsteriText` contains a tested native Swift text utility, kept isolated while
+the base application builds. It is not an integrated settings/UI feature yet.
 Retain Telegram-iOS's launch/extension targets in `Telegram/BUILD`, native libraries in
 `submodules/`, third-party dependencies in `third-party/`, and official Bazel/Make.py entry.
 The current upstream includes Swift, Objective-C, C/C++, Rust, and native widget runtimes;

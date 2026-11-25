@@ -47,5 +47,14 @@ jobs:
       - name: Compile and test the native text prototype
         run: |
           set -euo pipefail
+          ASTERI_XCODE_VERSION=$(python3 -c 'import json; print(json.load(open("versions.json"))["xcode"])')
+          sudo xcode-select -s "/Applications/Xcode_${ASTERI_XCODE_VERSION}.app/Contents/Developer"
           swift --version
           swift test --package-path prototypes/AsteriText
+          swift test --configuration release --package-path prototypes/AsteriText
+          ASTERI_SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
+          mkdir -p "$RUNNER_TEMP/asteri-text"
+          xcrun --sdk iphoneos swiftc -sdk "$ASTERI_SDK_PATH" -target arm64-apple-ios15.0 \
+            -parse-as-library -emit-module -module-name AsteriText \
+            prototypes/AsteriText/Sources/AsteriText/ZalgoFilter.swift \
+            -emit-module-path "$RUNNER_TEMP/asteri-text/AsteriText.swiftmodule"
