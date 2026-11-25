@@ -6234,6 +6234,1034 @@
         }
       ],
       "reference_count": 6
+    },
+    {
+      "name": "saveHistory",
+      "type": "BooleanPref",
+      "declaration_start": "true)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 86,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 174
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 196
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 214
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 364
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 367
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 370
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 405
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/GenerateFromMessageBottomSheet.java",
+          "line": 75
+        }
+      ],
+      "reference_count": 30
+    },
+    {
+      "name": "responseStreaming",
+      "type": "BooleanPref",
+      "declaration_start": "true)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 87,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 546
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 550
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 23
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 79
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 105
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 119
+        }
+      ],
+      "reference_count": 6
+    },
+    {
+      "name": "temperature",
+      "type": "IntegerPref",
+      "declaration_start": "10)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 88,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 210
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/BackendRequest.java",
+          "line": 32
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/OnDeviceBackend.java",
+          "line": 303
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/OnDeviceBackend.java",
+          "line": 303
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/RestBackend.java",
+          "line": 239
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/RestBackend.java",
+          "line": 317
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 29
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 121
+        }
+      ],
+      "reference_count": 35
+    },
+    {
+      "name": "showResponseOnly",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 89,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 417
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 455
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 514
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 530
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 28
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 80
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 106
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 121
+        }
+      ],
+      "reference_count": 10
+    },
+    {
+      "name": "insertAsQuote",
+      "type": "BooleanPref",
+      "declaration_start": "true)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 90,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 526
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 22
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 81
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 107
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 122
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java",
+          "line": 11696
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Components/ChatActivityEnterView.java",
+          "line": 11724
+        }
+      ],
+      "reference_count": 7
+    },
+    {
+      "name": "onDeviceReasoning",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 91,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiController.java",
+          "line": 348
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 31
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 165
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 166
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 123
+        }
+      ],
+      "reference_count": 5
+    },
+    {
+      "name": "onDevicePreviewModel",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 92,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/OnDeviceAvailability.java",
+          "line": 99
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 30
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 170
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 171
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 124
+        }
+      ],
+      "reference_count": 5
+    },
+    {
+      "name": "onDeviceFastModel",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 93,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/OnDeviceAvailability.java",
+          "line": 99
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 29
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 173
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/ServicesActivity.kt",
+          "line": 174
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 125
+        }
+      ],
+      "reference_count": 5
+    },
+    {
+      "name": "selectedServiceId",
+      "type": "NullableStringPref",
+      "declaration_start": "null, \"selectedServiceId\")",
+      "group": "todo: remove after 2-3 updates",
+      "line": 107,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiController.java",
+          "line": 351
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiController.java",
+          "line": 352
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/data/Service.java",
+          "line": 164
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/data/Service.java",
+          "line": 164
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/data/Service.java",
+          "line": 165
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/data/Service.java",
+          "line": 166
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/backend/OnDeviceAvailability.java",
+          "line": 391
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 89
+        }
+      ],
+      "reference_count": 8
+    },
+    {
+      "name": "selectedServiceHash",
+      "type": "IntegerPref",
+      "declaration_start": "DEFAULT_SERVICE.legacyHash, LEGACY_SELECTED_SERVICE_KEY)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 108,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [],
+      "reference_count": 0
+    },
+    {
+      "name": "selectedRole",
+      "type": "StringPref",
+      "declaration_start": "Suggestions.entries[0].role.name)",
+      "group": "todo: remove after 2-3 updates",
+      "line": 109,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiController.java",
+          "line": 288
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/data/Role.java",
+          "line": 93
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/network/Client.java",
+          "line": 167
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 1190
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/AiResponseAlert.java",
+          "line": 1341
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 25
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/ai/ui/activities/AiPreferencesActivity.kt",
+          "line": 69
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 128
+        }
+      ],
+      "reference_count": 9
+    },
+    {
+      "name": "debugCameraMetrics",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 21,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 93
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/camera/RoundVideoUiHelper.java",
+          "line": 117
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 83
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 169
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Components/InstantCameraView.java",
+          "line": 11
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Components/InstantCameraView.java",
+          "line": 513
+        }
+      ],
+      "reference_count": 6
+    },
+    {
+      "name": "forceCompactSavedMusic",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 22,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 94
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 85
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 170
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/nowplaying/NowPlayingController.kt",
+          "line": 23
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/nowplaying/NowPlayingController.kt",
+          "line": 77
+        }
+      ],
+      "reference_count": 5
+    },
+    {
+      "name": "disableApiRequests",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 23,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/api/network/ApiClient.kt",
+          "line": 17
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/api/network/ApiClient.kt",
+          "line": 31
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 95
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 87
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 171
+        }
+      ],
+      "reference_count": 5
+    },
+    {
+      "name": "disableChatFadeWallpaperBlend",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 24,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 96
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 89
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 172
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Components/blur3/BlurredBackgroundWithFadeDrawable.java",
+          "line": 3
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Components/blur3/BlurredBackgroundWithFadeDrawable.java",
+          "line": 251
+        }
+      ],
+      "reference_count": 5
+    },
+    {
+      "name": "chatFadeUseWhiteBackground",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 25,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 97
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 91
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 173
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/utils/ui/ChatHeaderUiHelper.java",
+          "line": 91
+        }
+      ],
+      "reference_count": 4
+    },
+    {
+      "name": "profileColorDesign",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 26,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 93
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 174
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/profilecolor/ProfileColorTheme.java",
+          "line": 373
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/profilecolor/debug/ProfileColorDebugActivity.java",
+          "line": 88
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/profilecolor/debug/ProfileColorDebugActivity.java",
+          "line": 107
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/profilecolor/debug/ProfileColorDebugActivity.java",
+          "line": 107
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java",
+          "line": 1448
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/ProfileActivity.java",
+          "line": 1708
+        }
+      ],
+      "reference_count": 11
+    },
+    {
+      "name": "heapMonitorEnabled",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 27,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 98
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 119
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 120
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/HeapMonitor.kt",
+          "line": 69
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/HeapMonitor.kt",
+          "line": 75
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/HeapMonitor.kt",
+          "line": 76
+        }
+      ],
+      "reference_count": 6
+    },
+    {
+      "name": "heapMonitorLimitMb",
+      "type": "IntegerPref",
+      "declaration_start": "256)",
+      "group": "DebugConfig",
+      "line": 28,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 99
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/HeapMonitor.kt",
+          "line": 81
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/HeapMonitor.kt",
+          "line": 89
+        }
+      ],
+      "reference_count": 3
+    },
+    {
+      "name": "loadMonitorEnabled",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 29,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 100
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 135
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 136
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/LoadMonitor.kt",
+          "line": 106
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/LoadMonitor.kt",
+          "line": 115
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/LoadMonitor.kt",
+          "line": 116
+        }
+      ],
+      "reference_count": 6
+    },
+    {
+      "name": "loadMonitorCpuPercent",
+      "type": "IntegerPref",
+      "declaration_start": "5)",
+      "group": "DebugConfig",
+      "line": 30,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 101
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/LoadMonitor.kt",
+          "line": 124
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/LoadMonitor.kt",
+          "line": 127
+        }
+      ],
+      "reference_count": 3
+    },
+    {
+      "name": "freezeMonitorEnabled",
+      "type": "BooleanPref",
+      "declaration_start": "false)",
+      "group": "DebugConfig",
+      "line": 31,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 102
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 151
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugActivity.kt",
+          "line": 152
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/FreezeMonitor.kt",
+          "line": 114
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/FreezeMonitor.kt",
+          "line": 120
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/FreezeMonitor.kt",
+          "line": 121
+        }
+      ],
+      "reference_count": 6
+    },
+    {
+      "name": "freezeMonitorThresholdMs",
+      "type": "IntegerPref",
+      "declaration_start": "700)",
+      "group": "DebugConfig",
+      "line": 32,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 103
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/FreezeMonitor.kt",
+          "line": 126
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/debug/FreezeMonitor.kt",
+          "line": 129
+        }
+      ],
+      "reference_count": 3
+    },
+    {
+      "name": "useCurrentLocation",
+      "type": "BooleanPref",
+      "declaration_start": "true)",
+      "group": "PillStackConfig",
+      "line": 33,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 131
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherPill.java",
+          "line": 99
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherPill.java",
+          "line": 125
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 33
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 184
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 185
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 187
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 209
+        }
+      ],
+      "reference_count": 11
+    },
+    {
+      "name": "customWeatherLocation",
+      "type": "NullableStringPref",
+      "declaration_start": "null)",
+      "group": "PillStackConfig",
+      "line": 34,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 91
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 31
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 148
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 229
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 260
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Stories/recorder/Weather.java",
+          "line": 327
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Stories/recorder/Weather.java",
+          "line": 329
+        }
+      ],
+      "reference_count": 7
+    },
+    {
+      "name": "customWeatherAddress",
+      "type": "NullableStringPref",
+      "declaration_start": "null)",
+      "group": "PillStackConfig",
+      "line": 35,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 92
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 30
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 172
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 198
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 253
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/weather/WeatherSettingsActivity.kt",
+          "line": 261
+        }
+      ],
+      "reference_count": 6
+    },
+    {
+      "name": "infiniteScrolling",
+      "type": "BooleanPref",
+      "declaration_start": "true)",
+      "group": "PillStackConfig",
+      "line": 36,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 130
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/PillStackPreferencesActivity.kt",
+          "line": 25
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/PillStackPreferencesActivity.kt",
+          "line": 106
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/PillStackPreferencesActivity.kt",
+          "line": 170
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/PillStackView.java",
+          "line": 283
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/PillStackView.java",
+          "line": 299
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/PillStackView.java",
+          "line": 312
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/PillStackView.java",
+          "line": 353
+        }
+      ],
+      "reference_count": 9
+    },
+    {
+      "name": "gramTargetCurrency",
+      "type": "StringPref",
+      "declaration_start": "PillStackCurrencies.TARGET_AUTO)",
+      "group": "PillStackConfig",
+      "line": 37,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 132
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 375
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/crypto/GramPill.java",
+          "line": 44
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/crypto/GramPill.java",
+          "line": 49
+        }
+      ],
+      "reference_count": 4
+    },
+    {
+      "name": "btcTargetCurrency",
+      "type": "StringPref",
+      "declaration_start": "PillStackCurrencies.TARGET_AUTO)",
+      "group": "PillStackConfig",
+      "line": 38,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 133
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 376
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/crypto/BtcPill.java",
+          "line": 44
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/crypto/BtcPill.java",
+          "line": 49
+        }
+      ],
+      "reference_count": 4
+    },
+    {
+      "name": "usdTargetCurrency",
+      "type": "StringPref",
+      "declaration_start": "PillStackCurrencies.TARGET_AUTO)",
+      "group": "PillStackConfig",
+      "line": 39,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 134
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 377
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/crypto/UsdPill.java",
+          "line": 45
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/crypto/UsdPill.java",
+          "line": 48
+        },
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/ui/pills/crypto/UsdPill.java",
+          "line": 53
+        }
+      ],
+      "reference_count": 5
+    },
+    {
+      "name": "lastActivePillId",
+      "type": "IntegerPref",
+      "declaration_start": "-1, \"lastActivePillId\")",
+      "group": "PillStackConfig",
+      "line": 40,
+      "source": "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt",
+      "references": [
+        {
+          "path": "TMessagesProj/src/main/java/com/exteragram/messenger/backup/PreferencesUtils.java",
+          "line": 90
+        },
+        {
+          "path": "TMessagesProj/src/main/java/org/telegram/ui/Components/FragmentSearchField.java",
+          "line": 465
+        }
+      ],
+      "reference_count": 2
     }
   ],
   "sdk_modules": [
@@ -6727,6 +7755,12 @@
       ]
     }
   ],
+  "preferences_by_source": {
+    "TMessagesProj/src/main/java/com/exteragram/messenger/ExteraConfig.kt": 175,
+    "TMessagesProj/src/main/java/com/exteragram/messenger/ai/AiConfig.kt": 11,
+    "TMessagesProj/src/main/java/com/exteragram/messenger/debug/DebugConfig.kt": 12,
+    "TMessagesProj/src/main/java/com/exteragram/messenger/pillstack/core/PillStackConfig.kt": 8
+  },
   "base_plugin_methods": [
     {
       "name": "__new__",

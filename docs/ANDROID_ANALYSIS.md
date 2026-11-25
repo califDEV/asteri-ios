@@ -12,7 +12,8 @@ the checked-out source for preference consumers and SDK APIs. Its machine-readab
 evidence is [audit/android-inventory.json](audit/android-inventory.json). It found:
 
 - 585 Java/Kotlin files under the custom `com.exteragram.messenger` package across flavors.
-- 175 delegated ExteraConfig preferences; 32 Python source modules in `plugins-pysdk/src`.
+- 206 delegated preferences: ExteraConfig 175, AiConfig 11, DebugConfig 12, PillStackConfig 8;
+  32 Python source modules in `plugins-pysdk/src`.
 - Against the matching official release: 2,804 paths added, 846 modified, 1,243 deleted.
   These are file deltas, including resources/build metadata, not counts of features.
   An unmodified blob is strong equality evidence; changed blobs still require semantic review.
@@ -73,3 +74,17 @@ and can be reproduced by `research/compare-android.py`. Additional confirmed det
 - `ConnectionsManager`: request processing is extended with plugin pre/post hooks and
   sensitive-payment request tracking; this is a trust/security boundary requiring a
   dedicated audit before exposing a native plugin bridge.
+- `inline/InlineResults.kt` enables math, currency, unit and time-zone options and
+  selects measurement conventions from locale/configuration. `ExportSettings.java`
+  supports HTML, JSON or both, with media/type masks and individual peer/topic export.
+- `ai/network/backend/OnDeviceBackend.java` depends on Google's Android ML Kit GenAI
+  APIs; that runtime is unavailable on iOS. A different native backend would have
+  different model/hardware limits. AI configuration includes history/streaming settings.
+- `backup/InvisibleEncryptor.java` is reversible invisible-character encoding, and
+  `AiConfig.encrypt` uses Base64. Neither provides cryptographic protection; credentials
+  must use native protected storage if those features are ported.
+- `pillstack/core/PillStackConfig.kt` defines weather, GRAM/BTC/USD, cache and proxy
+  pills plus ordered active/hidden lists. These are additional to main ExteraConfig.
+- `adblock/WebAdBlocker.java` is an Android WebView request/cosmetic bridge. It cannot
+  become the native client's architecture; any optional browser filtering must use an
+  appropriate native integration rather than transplanting Android WebView code.

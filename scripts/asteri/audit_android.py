@@ -26,22 +26,25 @@ def tree(root):
 def inventory(android, official):
     android_tree, official_tree = tree(android), tree(official)
     prefs = []
-    group = 'General'
-    for number, line in enumerate((android / CONFIG).read_text(encoding='utf-8').splitlines(), 1):
-        if line.startswith('// '):
-            group = line[3:].strip()
-        match = re.match(r'\s*(?:private\s+)?var\s+(\w+)\s+by\s+(\w+Pref)\((.*)', line)
-        if match:
-            name, kind, initial = match.groups()
-            prefs.append({'name': name, 'type': kind, 'declaration_start': initial,
-                          'group': group, 'line': number, 'source': CONFIG,
-                          'references': [], 'reference_count': 0})
+    sources = sorted(path for path in android_tree if '/com/exteragram/messenger/' in path
+                     and path.endswith('Config.kt'))
+    for source in sources:
+        group = Path(source).stem
+        for number, line in enumerate((android / source).read_text(encoding='utf-8').splitlines(), 1):
+            if line.startswith('// '):
+                group = line[3:].strip()
+            match = re.match(r'\s*(?:private\s+)?var\s+(\w+)\s+by\s+(\w+Pref)\((.*)', line)
+            if match:
+                name, kind, initial = match.groups()
+                prefs.append({'name': name, 'type': kind, 'declaration_start': initial,
+                              'group': group, 'line': number, 'source': source,
+                              'references': [], 'reference_count': 0})
     by_token = {}
     for pref in prefs:
         name = pref['name']
         title = name[0].upper() + name[1:]
         for token in (name, 'get' + title, 'set' + title, 'is' + title):
-            by_token[token] = pref
+            by_token.setdefault(token, []).append(pref)
     matcher = re.compile(r'\b(?:' + '|'.join(map(re.escape, by_token)) + r')\b')
     custom_files, python_modules = [], []
     for path in android_tree:
@@ -52,10 +55,12 @@ def inventory(android, official):
             if path != CONFIG:
                 for number, line in enumerate(text.splitlines(), 1):
                     for token in set(matcher.findall(line)):
-                        pref = by_token[token]
-                        pref['reference_count'] += 1
-                        if len(pref['references']) < 8:
-                            pref['references'].append({'path': path, 'line': number})
+                        for pref in by_token[token]:
+                            if path == pref['source']:
+                                continue
+                            pref['reference_count'] += 1
+                            if len(pref['references']) < 8:
+                                pref['references'].append({'path': path, 'line': number})
         if path.startswith('plugins-pysdk/src/') and path.endswith('.py'):
             parsed = ast.parse((android / path).read_text(encoding='utf-8'), filename=path)
             imports = sorted({node.module for node in ast.walk(parsed)
@@ -75,6 +80,7 @@ def inventory(android, official):
         'comparison': 'Git tree/blob SHA comparison; matching release 13.2.2 (7303). Not a semantic diff.',
         'changes_by_type': dict(collections.Counter(x['change'] for x in changes)),
         'custom_source_files': custom_files, 'preferences': prefs, 'sdk_modules': python_modules,
+        'preferences_by_source': dict(collections.Counter(p['source'] for p in prefs)),
         'base_plugin_methods': [{'name': n.name, 'line': n.lineno} for n in api.body
                                 if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))],
         'android_upstream_changes': changes,
@@ -88,7 +94,8 @@ def source_link(commit, path, line=None):
 def matrix(data):
     lines = ['# Feature matrix — source discovery, port not yet implemented', '',
              f'Android pin: `{data["android_commit"]}`. Official comparison: `{data["official_commit"]}`.', '',
-             'This reproducible inventory covers every delegated ExteraConfig preference. A source reference',
+             'This reproducible inventory covers delegated preferences in ExteraConfig, AiConfig, DebugConfig',
+             'and PillStackConfig. A source reference',
              'may be an import, UI binding or behavior; it is not proof that the behavior was audited end to end.',
              'Additional subsystems and non-preference functions are tracked in ANDROID_ANALYSIS.md.',
              'Phase 2 remains in progress. No row is claimed as an implemented iOS port.', '',
@@ -108,7 +115,8 @@ def matrix(data):
                          for r in pref['references'][:3]) or 'No external lexical reference found'
         desc = f'{pref["group"]}; persisted {pref["type"]}'
         analog = candidates.get(pref['group'], 'Requires per-feature iOS mapping') + ' (candidate, unverified)'
-        lines.append(f'| `{pref["name"]}` | {desc} | [ExteraConfig.kt:{pref["line"]}]({source_link(data["android_commit"], CONFIG, pref["line"])}) | {refs} | {analog} | Audit consumer logic, implement native behavior after baseline, add behavior tests | Discovered; not ported | Not run on iOS | Requires individual platform assessment |')
+        label = Path(pref['source']).name
+        lines.append(f'| `{pref["name"]}` | {desc} | [{label}:{pref["line"]}]({source_link(data["android_commit"], pref["source"], pref["line"])}) | {refs} | {analog} | Audit consumer logic, implement native behavior after baseline, add behavior tests | Discovered; not ported | Not run on iOS | Requires individual platform assessment |')
     return '\n'.join(lines) + '\n'
 
 
@@ -124,4 +132,5 @@ if __name__ == '__main__':
     (directory / 'android-inventory.json').write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
     (args.docs / 'FEATURE_MATRIX.md').write_text(matrix(data), encoding='utf-8')
     print(json.dumps({'preferences': len(data['preferences']), 'custom_source_files': len(data['custom_source_files']),
-                      'sdk_modules': len(data['sdk_modules']), 'changes': data['changes_by_type']}, indent=2))
+                      'sdk_modules': len(data['sdk_modules']), 'preferences_by_source': data['preferences_by_source'],
+                      'changes': data['changes_by_type']}, indent=2))
