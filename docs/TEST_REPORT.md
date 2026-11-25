@@ -11,7 +11,8 @@
 | GitHub workflow static validation | Passed with actionlint 1.7.12; documented hosted preview label allowlisted |
 | Required iOS submodule checkout | All 12 initialized at pinned revisions |
 | Android reference working tree | Clean; required submodules initialized; optional upstream-disabled test262 excluded |
-| Native ARM64 compilation | Awaiting actual macOS workflow result |
+| Source publication | Full upstream history pushed to `https://github.com/califDEV/asteri-ios`; default branch `asteri/main` |
+| Native ARM64 compilation | Actions enabled; initial workflow registration/dispatch under investigation |
 | IPA structure / Mach-O | Inspector implemented and regression tested; no real app artifact inspected yet |
 | Signed build / installation | Not run; Apple signing material not supplied |
 | Simulator app / physical iPhone | Not run |
