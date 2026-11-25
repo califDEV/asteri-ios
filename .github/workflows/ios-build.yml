@@ -55,7 +55,8 @@ jobs:
         run: |
           set -euo pipefail
           git submodule sync --recursive
-          git submodule update --init --recursive --depth=1 --jobs=4
+          # Wallet example UI snapshots are LFS review files, not app inputs.
+          git -c 'lfs.fetchexclude=examples/swift/WalletEngineAppUITests/Snapshots/**,examples/web/e2e/scenarios/snapshots/**' submodule update --init --recursive --depth=1 --jobs=4
           git submodule status --recursive > build/asteri/submodules.txt
       - uses: actions/cache@v4
         with:
