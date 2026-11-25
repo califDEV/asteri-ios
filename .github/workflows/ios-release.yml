@@ -1,0 +1,58 @@
+name: iOS release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag on this exact commit, created after verified tests
+        required: true
+        type: string
+      mode:
+        type: choice
+        options: [unsigned, signed]
+        default: unsigned
+permissions:
+  contents: read
+jobs:
+  check-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require a tag on this commit
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          git check-ref-format "refs/tags/$RELEASE_TAG"
+          test "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")" = "$(git rev-parse HEAD)"
+  build:
+    needs: check-tag
+    uses: ./.github/workflows/ios-build.yml
+    with:
+      mode: ${{ inputs.mode }}
+    secrets: inherit
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: asteri-${{ inputs.mode }}-${{ github.run_id }}
+          path: release
+      - name: Verify checksum and publish prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          cd release
+          sha256sum --check SHA256SUMS
+          test -s Asteri.ipa
+          gh release create "$RELEASE_TAG" Asteri.ipa SHA256SUMS ipa-inspection.json provenance.json \
+            --verify-tag --prerelease --title "Asteri $RELEASE_TAG" \
+            --notes 'Experimental native iOS port. See BUILD_GUIDE and KNOWN_LIMITATIONS. Unsigned artifacts require signing before installation. Device testing and feature parity are not implied by compilation.'

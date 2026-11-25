@@ -1,5 +1,23 @@
 # AGENTS.md
 
+## Asteri port requirements
+
+- Read `ROADMAP.md` and `docs/BUILD_GUIDE.md` before port work.
+- Asteri is an independent, unofficial client based on exteraGram and Telegram-iOS.
+  Do not ship exteraGram or Telegram branding as the modified app's identity.
+- Keep upstream history and use the `upstream` remote. Android reference sources live
+  in `../references/exteraGram-Android`; never compile Android sources into the app.
+- Phase 3 requires a successful, verified ARM64 device build before large feature ports.
+  Only tag `baseline-ios-*` after an actual successful Actions build and IPA inspection.
+- Every port needs Android implementation evidence, an iOS implementation, meaningful
+  tests, a build result, and a matrix update. Discovery and a passing static check are
+  not evidence of feature parity or of a working app.
+- Never commit credentials or signing files. CI writes them under ignored `build-input/`.
+- Keep integration under `scripts/asteri`, `docs/`, and future `submodules/Asteri*` modules
+  wherever possible. Do not weaken upstream security or skip a failing check.
+- Preserve the existing upstream instructions below. Windows development uses GitHub
+  macOS runners for Apple SDK work; do not require a local Mac or paid runners.
+
 Guidance for coding agents working in this repository. The project guide is [`CLAUDE.md`](CLAUDE.md): how to build,
 which simulators to use, how to drive them (XcodeBuildMCP) and the invariants of each subsystem. Read it first.
 

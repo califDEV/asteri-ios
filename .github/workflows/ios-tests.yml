@@ -1,0 +1,33 @@
+name: iOS tests
+on:
+  push:
+    branches: ['asteri/**']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      simulator:
+        description: Also compile and launch the app on a macOS simulator
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  infrastructure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s scripts/asteri/tests -v
+      - run: python3 -m compileall -q scripts/asteri
+  simulator:
+    if: github.event_name == 'workflow_dispatch' && inputs.simulator
+    needs: infrastructure
+    uses: ./.github/workflows/ios-build.yml
+    with:
+      mode: simulator
+    secrets: inherit

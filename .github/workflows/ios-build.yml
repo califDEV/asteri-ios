@@ -1,0 +1,82 @@
+name: iOS build
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Device unsigned, device signed, or simulator
+        type: choice
+        options: [unsigned, signed, simulator]
+        default: unsigned
+      disable_extensions:
+        description: Omit extensions for a limited sideload build
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      mode:
+        type: string
+        default: unsigned
+      disable_extensions:
+        type: boolean
+        default: false
+    secrets:
+      TELEGRAM_BUILD_CONFIGURATION:
+        required: true
+      IOS_SIGNING_ARCHIVE_BASE64:
+        required: false
+      IOS_CERTIFICATE_PASSWORD:
+        required: false
+permissions:
+  contents: read
+concurrency:
+  group: ios-build-${{ github.ref }}-${{ inputs.mode }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: xcode-27
+    timeout-minutes: 330
+    env:
+      BUILD_MODE: ${{ inputs.mode }}
+      DISABLE_EXTENSIONS: ${{ inputs.disable_extensions }}
+      TELEGRAM_BUILD_CONFIGURATION: ${{ secrets.TELEGRAM_BUILD_CONFIGURATION }}
+      IOS_SIGNING_ARCHIVE_BASE64: ${{ secrets.IOS_SIGNING_ARCHIVE_BASE64 }}
+      IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check configuration, disk and pinned Xcode
+        run: python3 scripts/asteri/build.py preflight
+      - name: Checkout pinned dependencies
+        run: |
+          set -euo pipefail
+          git submodule sync --recursive
+          git submodule update --init --recursive --depth=1 --jobs=4
+          git submodule status --recursive > build/asteri/submodules.txt
+      - uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/asteri-bazel-repository
+          key: bazel-repository-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock', '.gitmodules') }}
+          restore-keys: bazel-repository-${{ runner.os }}-${{ runner.arch }}-
+      - name: Run infrastructure regression tests
+        run: python3 -m unittest discover -s scripts/asteri/tests -v
+      - name: Compile with the official Make.py
+        run: python3 -u scripts/asteri/build.py build
+      - name: Native regression tests and simulator launch
+        if: inputs.mode == 'simulator'
+        run: python3 -u scripts/asteri/build.py test
+      - name: Save logs and verified artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asteri-${{ inputs.mode }}-${{ github.run_id }}
+          path: build/asteri/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove ephemeral credentials
+        if: always()
+        run: python3 scripts/asteri/build.py cleanup

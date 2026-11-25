@@ -27,3 +27,6 @@ build:macos --strategy=SwiftCompile=worker
 
 common:macos --features=swift.use_global_module_cache
 common:macos --features=oso_prefix_is_pwd
+
+# Optional local/CI flags for the Asteri port. No effect on an upstream build.
+try-import %workspace%/build-input/asteri.bazelrc
