@@ -3,6 +3,7 @@
 import json
 import os
 import platform
+import plistlib
 import shutil
 import subprocess
 import sys
@@ -114,18 +115,34 @@ def build():
         command += ['--codesigningInformationPath', str(signing_dir)]
     else:
         command += ['--xcodeManagedCodesigning']
-    logged(command, 'build.log', (config['api_hash'],))
+    # Compile and check the actual generated metadata before the expensive app.
+    logged(command + ['--target', '//Telegram:UrlTypesInfoPlist'],
+           'metadata.log', (config['api_hash'],))
+    metadata = plistlib.loads((ROOT / 'bazel-bin/Telegram/UrlTypesInfoPlist.plist').read_bytes())
+    schemes = [scheme for entry in metadata.get('CFBundleURLTypes', [])
+               for scheme in entry.get('CFBundleURLSchemes', [])]
+    if config['app_specific_url_scheme'] not in schemes:
+        raise ValueError('Generated URL metadata is missing the configured app URL scheme')
+    write_json(OUTPUT / 'metadata-inspection.json', {'url_schemes': schemes})
     ipa = ROOT / 'bazel-bin/Telegram/Telegram.ipa'
-    if not ipa.is_file():
+    unverified = OUTPUT / 'unverified-compiled.ipa'
+    try:
+        logged(command, 'build.log', (config['api_hash'],))
+    finally:
+        # Preserve a real compiler output even if the wrapper's postbuild check
+        # fails. It remains explicitly unverified and is never a release asset.
+        if ipa.is_file():
+            shutil.copy2(ipa, unverified)
+    if not unverified.is_file():
         raise ValueError('Official build did not produce bazel-bin/Telegram/Telegram.ipa')
-    inspection = inspect_ipa(ipa, mode, config['bundle_id'], config['app_specific_url_scheme'])
+    inspection = inspect_ipa(unverified, mode, config['bundle_id'], config['app_specific_url_scheme'])
     if mode == 'signed':
         from signing import verify_signing
-        verify_signing(ipa, PRIVATE, inspection, config['team_id'])
+        verify_signing(unverified, PRIVATE, inspection, config['team_id'])
     inspection['extensions_disabled'] = os.getenv('DISABLE_EXTENSIONS', 'false').lower() == 'true'
     write_json(OUTPUT / 'ipa-inspection.json', inspection)
     target = OUTPUT / 'Asteri.ipa'
-    shutil.copy2(ipa, target)
+    unverified.replace(target)
     (OUTPUT / 'SHA256SUMS').write_text(f'{inspection["sha256"]}  Asteri.ipa\n', encoding='utf-8')
     print(f'Compiled and structurally verified {mode} artifact ({inspection["size_bytes"]} bytes).')
 

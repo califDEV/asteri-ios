@@ -54,6 +54,7 @@ load(
     "telegram_bazel_path",
     "telegram_use_xcode_managed_codesigning",
     "telegram_bundle_id",
+    "telegram_app_specific_url_scheme",
     "telegram_aps_environment",
     "telegram_team_id",
     "telegram_enable_icloud",
@@ -430,7 +431,7 @@ plist_fragment(
             <string>{telegram_bundle_id}</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>telegram</string>
+                <string>{telegram_app_specific_url_scheme}</string>
             </array>
         </dict>
         <dict>
@@ -449,6 +450,7 @@ plist_fragment(
     </array>
     """.format(
         telegram_bundle_id = telegram_bundle_id,
+        telegram_app_specific_url_scheme = telegram_app_specific_url_scheme,
     )
 )
 
