@@ -22,6 +22,14 @@ disable provisioning profiles and legacy signing using mechanisms present in the
 sources. The generated RC file is isolated under `build-input/`; upstream Make.py is retained.
 ARM64 simulator binaries are rejected as device artifacts by inspecting `LC_BUILD_VERSION`.
 
+The first real build showed that rules_apple also unconditionally embeds profiles for
+device apps/extensions. Unsigned mode now applies a SHA-256-checked, reviewable patch
+(`build-system/bazel-patches/asteri-unsigned-provisioning.patch`) to that local submodule.
+Only the combination `asteri.unsigned_archive` + `disable_legacy_signing` omits profile
+embedding; normal/signed builds retain the original checks. App/extensions remain real
+ARM64 device targets. Cleanup restores the exact source; the applied digests are retained
+in `unsigned-rules-patch.json`. No fabricated provisioning material is used.
+
 Signed mode requires a real Team ID in the JSON secret, `IOS_SIGNING_ARCHIVE_BASE64`
 (base64 ZIP containing `certs/*.p12` and `profiles/*.mobileprovision`) and
 `IOS_CERTIFICATE_PASSWORD`. Supply profiles for every enabled extension, matching bundle IDs,

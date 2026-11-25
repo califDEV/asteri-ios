@@ -2,6 +2,17 @@
 
 `MODULE.bazel` applies the patches in this directory.
 
+## Asteri unsigned device archives
+
+`scripts/asteri/unsigned.py` also applies the reviewable
+`asteri-unsigned-provisioning.patch` to the **local submodule override** only for
+unsigned device archives, after verifying its source SHA-256. Because this repository
+uses `local_path_override`, MODULE.bazel does not apply that patch itself. Cleanup
+restores the exact original rule. Two explicit features are required to omit embedded
+profiles: `asteri.unsigned_archive` and `disable_legacy_signing`. Normal/signed builds
+retain the original mandatory profile check; no fake profiles are generated. Simulator
+platform selection is unaffected. Review the patch and source hash together on upstream bumps.
+
 ## `xctestrunner-collect-test-diagnostics.patch`
 
 rules_apple's `ios_test_runner` drives xcodebuild through xctestrunner, which passes `-collect-test-diagnostics=never`.

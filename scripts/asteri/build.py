@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Thin CI orchestration around Telegram's official build. No emulation or fake IPA."""
-import hashlib
 import json
 import os
 import platform
@@ -72,6 +71,11 @@ def prepare():
         # Both flags are implemented by the pinned BUILD and rules_apple sources.
         flags += ['build --//Telegram:disableProvisioningProfiles',
                   'build --features=disable_legacy_signing']
+    if mode == 'unsigned':
+        from unsigned import apply
+        patch = apply(ROOT / 'build-system/bazel-rules/rules_apple/apple/internal/ios_rules.bzl')
+        write_json(OUTPUT / 'unsigned-rules-patch.json', patch)
+        flags += ['build --features=asteri.unsigned_archive']
     if os.getenv('DISABLE_EXTENSIONS', 'false').lower() == 'true':
         flags += ['build --//Telegram:disableExtensions']
     (ROOT / 'build-input/asteri.bazelrc').write_text('\n'.join(flags) + '\n', encoding='utf-8')
@@ -150,6 +154,8 @@ def cleanup():
         if candidate.exists():
             shutil.rmtree(candidate)
     (ROOT / 'build-input/asteri.bazelrc').unlink(missing_ok=True)
+    from unsigned import restore
+    restore(ROOT / 'build-system/bazel-rules/rules_apple/apple/internal/ios_rules.bzl')
 
 
 if __name__ == '__main__':

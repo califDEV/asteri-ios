@@ -18,3 +18,6 @@ Updated 2026-11-25. Completion requires actual app and device evidence.
 
 Build infrastructure checks do not satisfy Phase 3. Successful compilation does not
 satisfy login, messaging, media, plugin, performance or physical-device testing.
+
+First real macOS baseline attempt: [45708379459](https://github.com/califDEV/asteri-ios/actions/runs/45708379459).
+Infrastructure suite: [45708384597](https://github.com/califDEV/asteri-ios/actions/runs/45708384597) passed.

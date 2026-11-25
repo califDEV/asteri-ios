@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — 2026-11-26
+
+- Added explicit, source-hash-guarded unsigned device archive packaging after the first
+  real macOS attempt exposed unconditional profile embedding in rules_apple.
+- Normal/signed profile enforcement remains intact; two explicit unsigned features are
+  required. Added regression checks and retained the failed run's complete evidence.
+- Infrastructure suite passes locally (13 tests); the earlier GitHub run passed 11 tests.
+
 ## Unreleased — 2026-11-25
 
 - Preserved Telegram-iOS history at `24638bc69bd083981b178dd1e7f921eebbf7fc46`.
