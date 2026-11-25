@@ -57,3 +57,19 @@ Remaining audit work: all changed `org.telegram.*` call sites, exhaustive networ
 AI/on-device runtime and ad-block implementations, animation measurements, localization
 coverage, resource licenses, every experimental tool, plugin catalogs/update trust paths,
 and behavior tests. Source paths in the inventory are leads, not audited functional parity.
+
+Thirteen exact implementation diffs are saved in the workspace's `research/android-diffs/`
+and can be reproduced by `research/compare-android.py`. Additional confirmed details:
+
+- `FileLoadOperation.updateParams`: boost 2 uses 1 MiB chunks / 12 requests, boost 1
+  joins the experimental 512 KiB / 8-request branch; normal mode uses 128 KiB / 4.
+  Existing story/force-small handling must be audited before porting these values.
+- `FileUploadOperation`: initial boosted request count is 14 vs 8, bounded by
+  `maxRequestsCount`; boost also selects the large-file minimum chunk branch.
+  These parameters do not establish a measured speed improvement on iOS.
+- `ChatActivity`: available swipe and double-tap actions are collected through a
+  message-action eligibility mask, and execution delegates to existing selected-option
+  handlers. A port must preserve scheduled/protected-message and outgoing edit rules.
+- `ConnectionsManager`: request processing is extended with plugin pre/post hooks and
+  sensitive-payment request tracking; this is a trust/security boundary requiring a
+  dedicated audit before exposing a native plugin bridge.

@@ -114,7 +114,7 @@ def build():
     ipa = ROOT / 'bazel-bin/Telegram/Telegram.ipa'
     if not ipa.is_file():
         raise ValueError('Official build did not produce bazel-bin/Telegram/Telegram.ipa')
-    inspection = inspect_ipa(ipa, mode, config['bundle_id'])
+    inspection = inspect_ipa(ipa, mode, config['bundle_id'], config['app_specific_url_scheme'])
     if mode == 'signed':
         from signing import verify_signing
         verify_signing(ipa, PRIVATE, inspection, config['team_id'])

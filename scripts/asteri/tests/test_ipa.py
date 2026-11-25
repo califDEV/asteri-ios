@@ -18,7 +18,9 @@ def header(platform=2, cpu=ARM64, kind=2):
 class IpaInspectionTests(unittest.TestCase):
     def create_fixture(self, path, binary=None, extras=None, executable=True):
         info = dict(CFBundleIdentifier='org.example.asteri', CFBundleExecutable='Asteri',
-                    CFBundlePackageType='APPL', CFBundleSupportedPlatforms=['iPhoneOS'])
+                    CFBundlePackageType='APPL', CFBundleSupportedPlatforms=['iPhoneOS'],
+                    CFBundleShortVersionString='1.0', CFBundleVersion='1', MinimumOSVersion='15.0',
+                    CFBundleURLTypes=[{'CFBundleURLSchemes': ['asteri']}])
         with zipfile.ZipFile(path, 'w') as archive:
             archive.writestr('Payload/Asteri.app/Info.plist', plistlib.dumps(info))
             member = zipfile.ZipInfo('Payload/Asteri.app/Asteri')
@@ -63,3 +65,5 @@ class IpaInspectionTests(unittest.TestCase):
             self.assertEqual(len(report['sha256']), 64)
             with self.assertRaises(ValueError):
                 inspect_ipa(path, expected_bundle_id='org.wrong.id')
+            with self.assertRaises(ValueError):
+                inspect_ipa(path, expected_url_scheme='missing')

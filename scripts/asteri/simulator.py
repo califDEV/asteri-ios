@@ -38,6 +38,9 @@ def smoke(ipa, bundle_id, private, output):
         processes = run('xcrun', 'simctl', 'spawn', device, 'launchctl', 'list')
         if bundle_id not in processes:
             raise ValueError('App process exited after simulator launch')
+        # The upstream app stops initialization with "Error 2" if its group container
+        # cannot be resolved. Merely surviving as a process must not count as launch.
+        run('xcrun', 'simctl', 'get_app_container', device, bundle_id, 'group.' + bundle_id)
         run('xcrun', 'simctl', 'io', device, 'screenshot', str(output / 'simulator-launch.png'))
         (output / 'simulator-smoke.json').write_text(json.dumps({
             'launch': launch, 'runtime': runtime['identifier'], 'device': device,

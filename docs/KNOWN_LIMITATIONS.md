@@ -18,6 +18,11 @@ Updated 2026-11-25. This is an incomplete port, not a release-ready client.
   has not been supplied. No certificate or Apple service has been purchased.
 - Push delivery also needs server-side APNs integration for the client's bundle/team;
   merely signing an app is not evidence that Telegram notifications will work.
+- `TelegramUI/Sources/AppDelegate.swift` requires `group.<bundle ID>` storage and
+  stops initialization with "Error 2" when that container is unavailable. Disabling
+  extensions alone does not remove this requirement. A free-provisioning variant
+  needs a deliberate storage/keychain design or a signer that supplies working groups;
+  no fallback or successful free-account installation is claimed.
 - Standard hosted runner memory/disk/time may constrain a cold build; actual logs decide
   feasibility. No paid runner or macOS VM is configured.
 - Source history is retained; the current partial local clone fetches historical blobs

@@ -83,7 +83,7 @@ def checked_members(archive):
     return names
 
 
-def inspect_ipa(path, mode='unsigned', expected_bundle_id=None):
+def inspect_ipa(path, mode='unsigned', expected_bundle_id=None, expected_url_scheme=None):
     platform = 7 if mode == 'simulator' else 2
     result = {'mode': mode, 'device_tested': False, 'binaries': [], 'bundles': []}
     with zipfile.ZipFile(path) as archive:
@@ -125,8 +125,19 @@ def inspect_ipa(path, mode='unsigned', expected_bundle_id=None):
                 if expected not in info.get('CFBundleSupportedPlatforms', []):
                     raise ValueError('Wrong bundle platform')
                 result['bundle_id'] = identifier
-                result['version'] = info.get('CFBundleShortVersionString')
-                result['build'] = info.get('CFBundleVersion')
+                for key in ('CFBundleShortVersionString', 'CFBundleVersion', 'MinimumOSVersion'):
+                    if not re.fullmatch(r'[0-9]+(?:\.[0-9]+)*', str(info.get(key, ''))):
+                        raise ValueError(f'Missing or invalid main bundle version: {key}')
+                schemes = [scheme for entry in info.get('CFBundleURLTypes', [])
+                           for scheme in entry.get('CFBundleURLSchemes', [])]
+                if any(not isinstance(s, str) or not re.fullmatch(r'[A-Za-z][A-Za-z0-9+.-]*', s) for s in schemes):
+                    raise ValueError('Invalid app URL scheme')
+                if expected_url_scheme and expected_url_scheme not in schemes:
+                    raise ValueError('Configured app URL scheme is missing')
+                result['version'] = info['CFBundleShortVersionString']
+                result['build'] = info['CFBundleVersion']
+                result['minimum_ios'] = info['MinimumOSVersion']
+                result['url_schemes'] = schemes
             elif bundle.endswith('.appex'):
                 main_id = plistlib.loads(archive.read(f'{root}/Info.plist'))['CFBundleIdentifier']
                 if not identifier.startswith(main_id + '.'):
@@ -161,9 +172,10 @@ if __name__ == '__main__':
     parser.add_argument('ipa', type=Path)
     parser.add_argument('--mode', choices=['unsigned', 'signed', 'simulator'], default='unsigned')
     parser.add_argument('--bundle-id')
+    parser.add_argument('--url-scheme')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
-    inspection = inspect_ipa(args.ipa, args.mode, args.bundle_id)
+    inspection = inspect_ipa(args.ipa, args.mode, args.bundle_id, args.url_scheme)
     output = json.dumps(inspection, indent=2) + '\n'
     if args.output:
         args.output.write_text(output, encoding='utf-8')
