@@ -17,3 +17,8 @@ Run `swift test --package-path prototypes/AsteriText`. Tests cover Latin/Arabic 
 mixed limits, bidi controls, emoji, supplementary scalars, disabled mode, attributes,
 unchanged input and long input. Results from the dedicated macOS native-text CI job
 must be recorded separately from Python infrastructure checks.
+
+Verified in [run 45712163625](https://github.com/califDEV/asteri-ios/actions/runs/45712163625):
+10 scenarios passed in both debug and release on macOS/Swift 6.4, and the source compiled
+as a module for `arm64-apple-ios15.0` with the iPhoneOS SDK. App integration, simulator
+rendering and physical-device behavior remain unverified.

@@ -4,7 +4,7 @@
     "analog": "[AsteriText Swift/Foundation prototype](../prototypes/AsteriText/Sources/AsteriText/ZalgoFilter.swift)",
     "plan": "Integrate at presentation-only iOS seams with persistent setting after a verified base build; check displayed frames",
     "implementation": "Native prototype implemented; app integration pending",
-    "testing": "[10 native macOS tests passed on Swift 6.4](https://github.com/califDEV/asteri-ios/actions/runs/45711409372); source 88ed8ba542",
+    "testing": "[10 native scenarios passed in debug and release; module compiled for ARM64 iOS 15.0 SDK](https://github.com/califDEV/asteri-ios/actions/runs/45712163625); source f72a7b4059",
     "limitations": "iOS app/device integration, OS Unicode-category differences, visual and performance checks pending"
   }
 }

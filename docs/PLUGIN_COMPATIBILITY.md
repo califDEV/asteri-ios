@@ -63,3 +63,36 @@ distribution need separate policy assessments; signing/sandbox constraints still
 Bundling an interpreter is not automatic permission for a general downloadable plugin system.
 The main client must work without jailbreak. Pure/native fixture success, existing plugin
 success and physical-device success must be recorded separately.
+
+## Candidate for stronger Python isolation (research, not implemented)
+
+The pinned iOS base already vendors **WAMR 2.4.5** in `third-party/wamr/BUILD`, configured
+for an interpreter, with JIT/AOT, shared memory and thread manager disabled. WASI is
+enabled. Its exported API includes directory mappings, network/address lookup pools,
+instance memory limits and termination; their behavior with Python remains untested.
+The existing call engine's trusted-WASM loader and its security restrictions must remain
+unchanged. Message widgets use a separate native QuickJS runtime, not a Python engine.
+
+[CPython's official WASI build instructions](https://github.com/python/cpython/blob/main/Platforms/WASI/README.md)
+document cross-compiling the interpreter to WebAssembly. **Inference to investigate**:
+a separately instantiated Python/WASI interpreter could offer a more defensible memory
+and host-resource boundary than unrestricted native CPython subinterpreters, while
+reusing the already-vendored native interpreter. This would execute plugin logic inside
+the native iOS app and would not provide an Android runtime or Android hook compatibility.
+
+Before adopting this approach, prove all of the following with actual builds/tests:
+
+- A pinned/checksummed Python/WASI build and standard library run on this exact WAMR
+  version and feature configuration on macOS, iOS simulator and physical ARM64 iPhone.
+- Per-plugin instances expose only their own data directory and read-only runtime data;
+  attempted traversal/symlink escapes, cross-plugin reads and session-file access fail.
+- Network and native imports are denied by default; opt-in requests go through a bounded
+  host capability API. A module import must not grant arbitrary file/socket access.
+- Infinite loops, allocator pressure, exceptions and unload can be terminated without
+  touching the UI thread or changing the existing call engine's performance/security flags.
+- Memory/startup/event overhead and unsupported standard-library/native-wheel behavior
+  are measured. Neither WAMR availability nor Python's WASI support proves these properties.
+
+Java/Xposed/ART-dependent plugins would still need source changes or explicit supported
+DTO/event adapters. No existing plugin execution, runtime isolation or compatibility is
+claimed by this research. App Store policy assessment remains separate from IPA sideloading.

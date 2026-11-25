@@ -1,6 +1,7 @@
 # Test report
 
-2026-11-25, Windows development host. No application/device success is implied.
+Checks from 2026-11-25–26, Windows development host and GitHub macOS runners.
+No application/device success is implied.
 
 | Check | Observed result |
 |---|---|
@@ -10,6 +11,7 @@
 | GitHub infrastructure suite | [Successful run 45708384597](https://github.com/califDEV/asteri-ios/actions/runs/45708384597), 11 tests and Python compilation; source `f87393a6cbc6020d4c93a2b6fc6e10c4d9e18b9e` |
 | Updated GitHub infrastructure suite | [45709608632](https://github.com/califDEV/asteri-ios/actions/runs/45709608632) passed 13 tests; also passed alongside native tests in [45711409372](https://github.com/califDEV/asteri-ios/actions/runs/45711409372) |
 | Native Swift text prototype | [45711409372](https://github.com/califDEV/asteri-ios/actions/runs/45711409372): compiled on ARM64 macOS with Apple Swift 6.4; 10 XCTest cases passed. No app integration yet; source `88ed8ba542aff12287f060211e8a31216a791bd3` |
+| Native text release/iOS SDK verification | [45712163625](https://github.com/califDEV/asteri-ios/actions/runs/45712163625): same 10 scenarios passed in debug and release; source compiled with the pinned Xcode's iPhoneOS SDK for `arm64-apple-ios15.0`. This emits a module, not an executable app or IPA; source `f72a7b4059ee4f07127acf0f4ca7d9cd843fe0d9` |
 | Python source compilation | Passed using bundled CPython 3.12 |
 | GitHub workflow static validation | Passed with actionlint 1.7.12; documented hosted preview label allowlisted |
 | Required iOS submodule checkout | All 12 initialized at pinned revisions |
