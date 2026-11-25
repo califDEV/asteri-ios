@@ -1,0 +1,7 @@
+# GitHub's standard public-preview image is documented at:
+# https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md
+# actionlint 1.7.12 does not yet include this hosted label in its built-in list.
+# This lint allowlist does not change runs-on or select a self-hosted/paid runner.
+self-hosted-runner:
+  labels:
+    - xcode-27

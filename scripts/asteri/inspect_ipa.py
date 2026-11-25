@@ -137,7 +137,7 @@ def inspect_ipa(path, mode='unsigned', expected_bundle_id=None):
         for name in sorted(binaries):
             slices = macho_slices(archive.read(name))
             arm = [s for s in slices if s['cpu'] == ARM64]
-            if len(arm) != 1 or arm[0]['platforms'] != [platform]:
+            if len(arm) != 1 or any(s['platforms'] != [platform] for s in slices):
                 raise ValueError(f'Expected ARM64 platform {platform}: {name}')
             expected_kind = 6 if '.framework/' in name or name.endswith('.dylib') else 2
             if arm[0]['kind'] != expected_kind:
@@ -150,8 +150,8 @@ def inspect_ipa(path, mode='unsigned', expected_bundle_id=None):
             for bundle in result['bundles']:
                 if bundle['path'].endswith(('.app', '.appex')) and bundle['path'] + '/embedded.mobileprovision' not in names:
                     raise ValueError('Signed app or extension lacks an embedded profile')
-    result['sha256'] = hashlib.file_digest(open_file := Path(path).open('rb'), 'sha256').hexdigest()
-    open_file.close()
+    with Path(path).open('rb') as executable_file:
+        result['sha256'] = hashlib.file_digest(executable_file, 'sha256').hexdigest()
     result['size_bytes'] = Path(path).stat().st_size
     return result
 

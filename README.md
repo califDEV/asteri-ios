@@ -1,3 +1,9 @@
+# Asteri iOS port — work in progress
+
+Independent native port research based on exteraGram and Telegram-iOS. See
+[project status](README_ASTERI.md), [roadmap](ROADMAP.md), and [build guide](docs/BUILD_GUIDE.md).
+No completed feature parity or iPhone-tested build is claimed.
+
 # Telegram iOS Source Code Compilation Guide
 
 We welcome all developers to use our API and source code to create applications on our platform.
