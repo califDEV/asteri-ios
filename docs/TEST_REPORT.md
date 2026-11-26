@@ -1,7 +1,18 @@
 # Test report
 
 Checks from 2026-11-25–26, Windows development host and GitHub macOS runners.
-No application/device success is implied.
+Device behavior remains untested; the real device-targeted application compiled successfully.
+
+On 2026-11-26, [run 45715952913](https://github.com/califDEV/asteri-ios/actions/runs/45715952913)
+completed successfully from `c282490f0dd2e804f9fe91e8aed9669a3d46e07c`.
+Official Make.py produced a real 80,671,077-byte unsigned IPA (13.2, build 4, iOS 15.0+),
+including the main ARM64 iPhoneOS executable, five frameworks and six extensions.
+All twelve Mach-O executables passed device-platform and type inspection; main bundle
+`org.asteri.califdev` and configured `asteri` URL scheme matched. The downloaded file
+was inspected again on Windows and its SHA-256 matched the runner's report:
+`1b3e71d88ca81dc9e420672223f24b7a2c13263e50c6aeb3136aec8dba3f1700`.
+Baseline tag: `baseline-ios-13.2-20261126`. Machine-readable evidence is in
+`docs/builds/baseline-ios-13.2-20261126/`. No signing, launch or account test is implied.
 
 | Check | Observed result |
 |---|---|
@@ -18,7 +29,7 @@ No application/device success is implied.
 | Android reference working tree | Clean; required submodules initialized; optional upstream-disabled test262 excluded |
 | Source publication | Full upstream history pushed to `https://github.com/califDEV/asteri-ios`; default branch `asteri/main` |
 | Native ARM64 compilation | [First run 45708379459](https://github.com/califDEV/asteri-ios/actions/runs/45708379459) failed at rules_apple analysis: mandatory device provisioning for IntentsExtension, before compilation. Full log and artifacts retained locally. An explicit unsigned archive path is prepared for retry |
-| IPA structure / Mach-O | Inspector implemented and regression tested; no real app artifact inspected yet |
+| IPA structure / Mach-O | Real IPA from 45715952913 inspected on runner and Windows; all twelve binaries target ARM64 iPhoneOS |
 | Signed build / installation | Not run; Apple signing material not supplied |
 | Simulator app / physical iPhone | Not run |
 | Account, chat, send/receive, voice, media, restart | Not run |

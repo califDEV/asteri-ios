@@ -2,6 +2,11 @@
 
 ## Unreleased — 2026-11-26
 
+- Produced and inspected the first real unsigned ARM64 iPhoneOS IPA in successful run
+  45715952913 (Telegram-based baseline 13.2, iOS 15.0+); device signing and testing remain open.
+- Wired the configured app URL scheme into generated Info.plist and verified this metadata
+  before full compilation. Retain real compiler archives if later verification fails.
+- Excluded wallet example LFS test snapshots from dependency checkout after a server timeout.
 - Added explicit, source-hash-guarded unsigned device archive packaging after the first
   real macOS attempt exposed unconditional profile embedding in rules_apple.
 - Normal/signed profile enforcement remains intact; two explicit unsigned features are

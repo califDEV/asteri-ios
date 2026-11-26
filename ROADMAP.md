@@ -1,13 +1,13 @@
 # Asteri port roadmap
 
-Updated 2026-11-25. Completion requires actual app and device evidence.
+Updated 2026-11-26. Completion requires actual app and device evidence.
 
 | Phase | State | Exit criterion |
 |---|---|---|
 | 0 Environment | Complete | Git, portable gh, Python and GitHub authentication checked |
 | 1 Sources | Complete for required sources | Both repositories and build submodules checked out at pinned commits |
 | 2 Android audit | In progress | Implementation-based matrix, plugin/API audit, Android upstream comparison |
-| 3 Baseline iOS build | In progress | Official Make.py succeeds; real device ARM64 IPA inspected; commit/tag and run URL recorded |
+| 3 Baseline iOS build | Complete | Run 45715952913 succeeded; ARM64 device IPA inspected; source c282490f0dd2e804f9fe91e8aed9669a3d46e07c, tag baseline-ios-13.2-20261126 |
 | 4 Custom architecture | Pending Phase 3 | Isolated native modules and persistent preferences design |
 | 5 Feature ports | Pending | Each behavior implemented, tested, built, documented, committed |
 | 6 Native interface | Pending | Independent branding, settings, themes, visual simulator evidence |
@@ -21,3 +21,9 @@ satisfy login, messaging, media, plugin, performance or physical-device testing.
 
 First real macOS baseline attempt: [45708379459](https://github.com/califDEV/asteri-ios/actions/runs/45708379459).
 Infrastructure suite: [45708384597](https://github.com/califDEV/asteri-ios/actions/runs/45708384597) passed.
+
+Verified baseline: [45715952913](https://github.com/califDEV/asteri-ios/actions/runs/45715952913),
+80,671,077-byte unsigned IPA, iOS 15.0+, SHA-256
+`1b3e71d88ca81dc9e420672223f24b7a2c13263e50c6aeb3136aec8dba3f1700`.
+This is the Telegram-based compilation baseline; no app-integrated extera features or
+physical-device installation are established by this milestone.

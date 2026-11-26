@@ -1,12 +1,16 @@
 # Known limitations and current evidence
 
-Updated 2026-11-25. This is an incomplete port, not a release-ready client.
+Updated 2026-11-26. This is an incomplete port, not a release-ready client.
+
+A real unsigned ARM64 baseline IPA was compiled and inspected in successful
+[run 45715952913](https://github.com/califDEV/asteri-ios/actions/runs/45715952913).
+It requires iOS 15.0+ and signing before installation. See TEST_REPORT for exact evidence.
 
 - No exteraGram-specific behavior is implemented in the iOS application yet. Phase 3
   (verified base compilation) precedes large feature ports by requirement.
 - Android audit includes matching-release file comparison and a 206-preference source
   inventory; exhaustive semantic/behavioral/resource/network audit remains open.
-- Device build, simulator launch, login, chats, sending/receiving, voice/media, themes,
+- Device-targeted compilation passed. Simulator launch, login, chats, sending/receiving, voice/media, themes,
   restart, accessibility, animations and performance require their actual test records.
   Infrastructure unit tests establish none of these app behaviors.
 - No iOS Plugin Engine, Python runtime or existing-plugin execution is implemented.
@@ -31,5 +35,5 @@ Updated 2026-11-25. This is an incomplete port, not a release-ready client.
   and is not an app build dependency.
 
 See PLUGIN_COMPATIBILITY for concrete platform gaps and BUILD_GUIDE for signing modes.
-No successful IPA, release, baseline tag or physical-device result should be inferred
-from the existence of these documents or workflows. Update this file when real evidence exists.
+The baseline compile and IPA inspection are established; physical-device behavior,
+feature parity and a final client release remain unverified.

@@ -1,0 +1,17 @@
+{
+  "versions": {
+    "app": "13.2",
+    "xcode": "27.1",
+    "deploy_xcode": "27.1",
+    "bazel": "9.2.0:dd466352a3e4d3581b8898740ee1ff208866ccbe25f8d367c5dcb950219587e6",
+    "macos": "27"
+  },
+  "xcode": "Xcode 27.1\nBuild version 27A9275",
+  "macos": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434",
+  "machine": "arm64",
+  "free_bytes": 46700535808,
+  "source_commit": "c282490f0dd2e804f9fe91e8aed9669a3d46e07c",
+  "run_url": "https://github.com/califDEV/asteri-ios/actions/runs/45715952913",
+  "mode": "unsigned",
+  "device_tested": false
+}

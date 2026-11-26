@@ -1,0 +1,214 @@
+{
+  "mode": "unsigned",
+  "device_tested": false,
+  "binaries": [
+    {
+      "path": "Payload/Telegram.app/Frameworks/MtProtoKitFramework.framework/MtProtoKitFramework",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 6,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/PostboxFramework.framework/PostboxFramework",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 6,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/SwiftSignalKitFramework.framework/SwiftSignalKitFramework",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 6,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/TelegramCoreFramework.framework/TelegramCoreFramework",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 6,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/TelegramUIFramework.framework/TelegramUIFramework",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 6,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/BroadcastUploadExtension.appex/BroadcastUploadExtension",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 2,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/IntentsExtension.appex/IntentsExtension",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 2,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/NotificationContentExtension.appex/NotificationContentExtension",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 2,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/NotificationServiceExtensionv1.appex/NotificationServiceExtensionv1",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 2,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/ShareExtension.appex/ShareExtension",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 2,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/WidgetExtension.appex/WidgetExtension",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 2,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Payload/Telegram.app/Telegram",
+      "slices": [
+        {
+          "cpu": 16777228,
+          "kind": 2,
+          "platforms": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "path": "Payload/Telegram.app/Frameworks/MtProtoKitFramework.framework",
+      "bundle_id": "org.asteri.califdev.MtProtoKit"
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/PostboxFramework.framework",
+      "bundle_id": "org.asteri.califdev.Postbox"
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/SwiftSignalKitFramework.framework",
+      "bundle_id": "org.asteri.califdev.SwiftSignalKit"
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/TelegramCoreFramework.framework",
+      "bundle_id": "org.asteri.califdev.TelegramCore"
+    },
+    {
+      "path": "Payload/Telegram.app/Frameworks/TelegramUIFramework.framework",
+      "bundle_id": "org.asteri.califdev.TelegramUI"
+    },
+    {
+      "path": "Payload/Telegram.app",
+      "bundle_id": "org.asteri.califdev"
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/BroadcastUploadExtension.appex",
+      "bundle_id": "org.asteri.califdev.BroadcastUpload"
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/IntentsExtension.appex",
+      "bundle_id": "org.asteri.califdev.SiriIntents"
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/NotificationContentExtension.appex",
+      "bundle_id": "org.asteri.califdev.NotificationContent"
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/NotificationServiceExtensionv1.appex",
+      "bundle_id": "org.asteri.califdev.NotificationService"
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/ShareExtension.appex",
+      "bundle_id": "org.asteri.califdev.Share"
+    },
+    {
+      "path": "Payload/Telegram.app/PlugIns/WidgetExtension.appex",
+      "bundle_id": "org.asteri.califdev.Widget"
+    }
+  ],
+  "bundle_id": "org.asteri.califdev",
+  "version": "13.2",
+  "build": "4",
+  "minimum_ios": "15.0",
+  "url_schemes": [
+    "asteri",
+    "tg",
+    "tonsite",
+    "ton",
+    "tc"
+  ],
+  "sha256": "1b3e71d88ca81dc9e420672223f24b7a2c13263e50c6aeb3136aec8dba3f1700",
+  "size_bytes": 80671077,
+  "extensions_disabled": false
+}
