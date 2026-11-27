@@ -3,12 +3,18 @@ import json
 import plistlib
 import signal
 import subprocess
+import sys
 import time
 from inspect_ipa import inspect_ipa
 
 
 def run(*args):
-    return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT).strip()
+    result = subprocess.run(args, capture_output=True, text=True)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr, flush=True)
+    if result.returncode:
+        raise RuntimeError(f'{args[:3]} failed with status {result.returncode}: {result.stderr}')
+    return result.stdout.strip()
 
 
 def create_simulator(name, preferred_names=('iPhone 17', 'iPhone 18 Pro', 'iPhone 17 Pro')):

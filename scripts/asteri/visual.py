@@ -18,7 +18,13 @@ from simulator import create_simulator
 
 
 def run(*args):
-    return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT).strip()
+    print('Simulator command: ' + ' '.join(args[:4]), flush=True)
+    result = subprocess.run(args, capture_output=True, text=True)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr, flush=True)
+    if result.returncode:
+        raise RuntimeError(f'{args[:3]} failed with status {result.returncode}: {result.stderr}')
+    return result.stdout.strip()
 
 
 def wait_for_state(path, predicate):
@@ -33,7 +39,7 @@ def wait_for_state(path, predicate):
         except (FileNotFoundError, json.JSONDecodeError):
             pass
         time.sleep(0.2)
-    raise RuntimeError('Harness did not reach the required preference state')
+    raise RuntimeError('Harness did not reach the required preference state at ' + str(path))
 
 
 def main():
@@ -71,6 +77,9 @@ def record_harness(ipa, app_source):
     device, runtime, device_type = create_simulator('Asteri-QA-' + os.getenv('GITHUB_RUN_ID', 'local'), ('iPhone 18 Pro', 'iPhone 17 Pro', 'iPhone 17'))
     recorder = None
     record_log = None
+    console = None
+    console_log = None
+    container = None
     bundle = 'org.asteri.VisualHarness'
     try:
         run('xcrun', 'simctl', 'boot', device)
@@ -84,8 +93,13 @@ def record_harness(ipa, app_source):
             if len(apps) != 1:
                 raise ValueError('Harness does not contain a single app')
             run('xcrun', 'simctl', 'install', device, str(apps[0]))
-        run('xcrun', 'simctl', 'launch', device, bundle)
+        console_log = (OUTPUT / 'app-console.log').open('w')
+        console = subprocess.Popen(['xcrun', 'simctl', 'launch', '--console', device, bundle],
+                                   stdout=console_log, stderr=subprocess.STDOUT)
+        time.sleep(1)
         container = Path(run('xcrun', 'simctl', 'get_app_container', device, bundle, 'data'))
+        write_json(OUTPUT / 'harness-session.json', {'container': str(container), 'device': device,
+                                                   'runtime': runtime, 'device_type': device_type})
         state_path = container / 'Documents/state.json'
         states = [wait_for_state(state_path, lambda s: s['filterZalgo'] is True)]
         record_log = (OUTPUT / 'recording.log').open('w')
@@ -143,6 +157,9 @@ def record_harness(ipa, app_source):
         })
         print(f'Recorded {count} original video frames; inspect before claiming visual success.')
     finally:
+        subprocess.run(['xcrun', 'simctl', 'io', device, 'screenshot', str(OUTPUT / 'harness-last-frame.png')], check=False)
+        if container is not None and container.is_dir():
+            write_json(OUTPUT / 'container-files.json', [str(p.relative_to(container)) for p in container.rglob('*') if len(p.relative_to(container).parts) <= 4][:200])
         if recorder is not None:
             recorder.send_signal(signal.SIGINT)
             recorder.wait(timeout=20)
@@ -152,6 +169,11 @@ def record_harness(ipa, app_source):
                               '--style', 'compact', '--predicate', 'process == "AsteriHarness"'],
                              capture_output=True, text=True)
         (OUTPUT / 'simulator-system.log').write_text(log.stdout + log.stderr)
+        if console is not None and console.poll() is None:
+            console.terminate()
+            console.wait(timeout=10)
+        if console_log is not None:
+            console_log.close()
         subprocess.run(['xcrun', 'simctl', 'shutdown', device], check=False)
         subprocess.run(['xcrun', 'simctl', 'delete', device], check=False)
 
