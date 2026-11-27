@@ -1,4 +1,5 @@
 import Foundation
+import AsteriFeatures
 import UIKit
 import SwiftSignalKit
 import Postbox
@@ -103,8 +104,9 @@ public final class PresentationData: Equatable {
     public let nameSortOrder: PresentationPersonNameOrder
     public let reduceMotion: Bool
     public let largeEmoji: Bool
+    public let asteriSettings: AsteriSettings
     
-    public init(strings: PresentationStrings, theme: PresentationTheme, autoNightModeTriggered: Bool, chatWallpaper: TelegramWallpaper, chatFontSize: PresentationFontSize, chatBubbleCorners: PresentationChatBubbleCorners, listsFontSize: PresentationFontSize, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, nameSortOrder: PresentationPersonNameOrder, reduceMotion: Bool, largeEmoji: Bool) {
+    public init(strings: PresentationStrings, theme: PresentationTheme, autoNightModeTriggered: Bool, chatWallpaper: TelegramWallpaper, chatFontSize: PresentationFontSize, chatBubbleCorners: PresentationChatBubbleCorners, listsFontSize: PresentationFontSize, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, nameSortOrder: PresentationPersonNameOrder, reduceMotion: Bool, largeEmoji: Bool, asteriSettings: AsteriSettings = .defaultSettings) {
         self.strings = strings
         self.theme = theme
         self.autoNightModeTriggered = autoNightModeTriggered
@@ -117,22 +119,23 @@ public final class PresentationData: Equatable {
         self.nameSortOrder = nameSortOrder
         self.reduceMotion = reduceMotion
         self.largeEmoji = largeEmoji
+        self.asteriSettings = asteriSettings
     }
     
     public func withUpdated(theme: PresentationTheme) -> PresentationData {
-        return PresentationData(strings: self.strings, theme: theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji)
+        return PresentationData(strings: self.strings, theme: theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji, asteriSettings: self.asteriSettings)
     }
     
     public func withUpdated(chatWallpaper: TelegramWallpaper) -> PresentationData {
-        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji)
+        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji, asteriSettings: self.asteriSettings)
     }
     
     public func withUpdate(listsFontSize: PresentationFontSize) -> PresentationData {
-        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji)
+        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji, asteriSettings: self.asteriSettings)
     }
     
     public static func ==(lhs: PresentationData, rhs: PresentationData) -> Bool {
-        return lhs.strings === rhs.strings && lhs.theme === rhs.theme && lhs.autoNightModeTriggered == rhs.autoNightModeTriggered && lhs.chatWallpaper == rhs.chatWallpaper && lhs.chatFontSize == rhs.chatFontSize && lhs.chatBubbleCorners == rhs.chatBubbleCorners && lhs.listsFontSize == rhs.listsFontSize && lhs.dateTimeFormat == rhs.dateTimeFormat && lhs.reduceMotion == rhs.reduceMotion && lhs.largeEmoji == rhs.largeEmoji
+        return lhs.strings === rhs.strings && lhs.theme === rhs.theme && lhs.autoNightModeTriggered == rhs.autoNightModeTriggered && lhs.chatWallpaper == rhs.chatWallpaper && lhs.chatFontSize == rhs.chatFontSize && lhs.chatBubbleCorners == rhs.chatBubbleCorners && lhs.listsFontSize == rhs.listsFontSize && lhs.dateTimeFormat == rhs.dateTimeFormat && lhs.reduceMotion == rhs.reduceMotion && lhs.largeEmoji == rhs.largeEmoji && lhs.asteriSettings == rhs.asteriSettings
     }
 }
 
@@ -260,6 +263,7 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
         var contactSynchronizationSettings: PreferencesEntry?
         var stickerSettings: PreferencesEntry?
         var chatSettings: PreferencesEntry?
+        var asteriSettings: PreferencesEntry?
         
         init(
             localizationSettings: PreferencesEntry?,
@@ -273,7 +277,8 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             experimentalUISettings: PreferencesEntry?,
             contactSynchronizationSettings: PreferencesEntry?,
             stickerSettings: PreferencesEntry?,
-            chatSettings: PreferencesEntry?
+            chatSettings: PreferencesEntry?,
+            asteriSettings: PreferencesEntry?
         ) {
             self.localizationSettings = localizationSettings
             self.presentationThemeSettings = presentationThemeSettings
@@ -287,6 +292,7 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             self.contactSynchronizationSettings = contactSynchronizationSettings
             self.stickerSettings = stickerSettings
             self.chatSettings = chatSettings
+            self.asteriSettings = asteriSettings
         }
     }
     
@@ -316,7 +322,8 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             experimentalUISettings: experimentalUISettings,
             contactSynchronizationSettings: contactSynchronizationSettings,
             stickerSettings: stickerSettings,
-            chatSettings: chatSettings
+            chatSettings: chatSettings,
+            asteriSettings: transaction.getSharedData(ApplicationSpecificSharedDataKeys.asteriSettings)
         )
     }
     |> deliverOn(Queue(name: "PresentationData-Load", qos: .userInteractive))
@@ -391,13 +398,15 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             chatSettings = ChatSettings.defaultSettings
         }
         
+        let asteriSettings = internalData.asteriSettings?.get(AsteriSettings.self) ?? .defaultSettings
+
         let experimentalUISettings: ExperimentalUISettings = internalData.experimentalUISettings?.get(ExperimentalUISettings.self) ?? ExperimentalUISettings.defaultSettings
         
         let contactSettings: ContactSynchronizationSettings = internalData.contactSynchronizationSettings?.get(ContactSynchronizationSettings.self) ?? ContactSynchronizationSettings.defaultSettings
         
         if !themeSettings.chatBubbleSettings.bubbleMode {
             let autoNightModeTriggered = automaticThemeShouldSwitchNow(AutomaticThemeSwitchParameters(settings: themeSettings.automaticThemeSwitchSetting), systemUserInterfaceStyle: systemUserInterfaceStyle)
-            let presentationData = bubblelessPresentationData(mediaBox: accountManager.mediaBox, themeSettings: themeSettings, autoNightModeTriggered: autoNightModeTriggered, localizationSettings: localizationSettings, nameDisplayOrder: contactSettings.nameDisplayOrder)
+            let presentationData = bubblelessPresentationData(mediaBox: accountManager.mediaBox, themeSettings: themeSettings, autoNightModeTriggered: autoNightModeTriggered, localizationSettings: localizationSettings, nameDisplayOrder: contactSettings.nameDisplayOrder, asteriSettings: asteriSettings)
             return InitialPresentationDataAndSettings(presentationData: presentationData, automaticMediaDownloadSettings: automaticMediaDownloadSettings, autodownloadSettings: autodownloadSettings, callListSettings: callListSettings, inAppNotificationSettings: inAppNotificationSettings, mediaInputSettings: mediaInputSettings, mediaDisplaySettings: mediaDisplaySettings, stickerSettings: stickerSettings, chatSettings: chatSettings, experimentalUISettings: experimentalUISettings)
         }
         
@@ -445,7 +454,7 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
         
         let chatBubbleCorners = PresentationChatBubbleCorners(settings: themeSettings.chatBubbleSettings)
         
-        return InitialPresentationDataAndSettings(presentationData: PresentationData(strings: stringsValue, theme: theme, autoNightModeTriggered: autoNightModeTriggered, chatWallpaper: effectiveChatWallpaper, chatFontSize: chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, nameSortOrder: nameSortOrder, reduceMotion: themeSettings.reduceMotion, largeEmoji: themeSettings.largeEmoji), automaticMediaDownloadSettings: automaticMediaDownloadSettings, autodownloadSettings: autodownloadSettings, callListSettings: callListSettings, inAppNotificationSettings: inAppNotificationSettings, mediaInputSettings: mediaInputSettings, mediaDisplaySettings: mediaDisplaySettings, stickerSettings: stickerSettings, chatSettings: chatSettings, experimentalUISettings: experimentalUISettings)
+        return InitialPresentationDataAndSettings(presentationData: PresentationData(strings: stringsValue, theme: theme, autoNightModeTriggered: autoNightModeTriggered, chatWallpaper: effectiveChatWallpaper, chatFontSize: chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, nameSortOrder: nameSortOrder, reduceMotion: themeSettings.reduceMotion, largeEmoji: themeSettings.largeEmoji, asteriSettings: asteriSettings), automaticMediaDownloadSettings: automaticMediaDownloadSettings, autodownloadSettings: autodownloadSettings, callListSettings: callListSettings, inAppNotificationSettings: inAppNotificationSettings, mediaInputSettings: mediaInputSettings, mediaDisplaySettings: mediaDisplaySettings, stickerSettings: stickerSettings, chatSettings: chatSettings, experimentalUISettings: experimentalUISettings)
     }
 }
 
@@ -741,8 +750,9 @@ public func chatServiceBackgroundColor(wallpaper: TelegramWallpaper, mediaBox: M
 }
 
 public func updatedPresentationData(accountManager: AccountManager<TelegramAccountManagerTypes>, applicationInForeground: Signal<Bool, NoError>, systemUserInterfaceStyle: Signal<WindowUserInterfaceStyle, NoError>) -> Signal<PresentationData, NoError> {
-    return combineLatest(accountManager.sharedData(keys: [SharedDataKeys.localizationSettings, ApplicationSpecificSharedDataKeys.presentationThemeSettings, ApplicationSpecificSharedDataKeys.contactSynchronizationSettings]), systemUserInterfaceStyle)
+    return combineLatest(accountManager.sharedData(keys: [SharedDataKeys.localizationSettings, ApplicationSpecificSharedDataKeys.presentationThemeSettings, ApplicationSpecificSharedDataKeys.contactSynchronizationSettings, ApplicationSpecificSharedDataKeys.asteriSettings]), systemUserInterfaceStyle)
     |> mapToSignal { sharedData, systemUserInterfaceStyle -> Signal<PresentationData, NoError> in
+        let asteriSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.asteriSettings]?.get(AsteriSettings.self) ?? .defaultSettings
         let themeSettings: PresentationThemeSettings
         if let current = sharedData.entries[ApplicationSpecificSharedDataKeys.presentationThemeSettings]?.get(PresentationThemeSettings.self) {
             themeSettings = current
@@ -760,7 +770,7 @@ public func updatedPresentationData(accountManager: AccountManager<TelegramAccou
                     |> distinctUntilChanged
                     |> map { autoNightModeTriggered in
                         let localizationSettings = sharedData.entries[SharedDataKeys.localizationSettings]?.get(LocalizationSettings.self)
-                        return bubblelessPresentationData(mediaBox: accountManager.mediaBox, themeSettings: themeSettings, autoNightModeTriggered: autoNightModeTriggered, localizationSettings: localizationSettings, nameDisplayOrder: contactSettings.nameDisplayOrder)
+                        return bubblelessPresentationData(mediaBox: accountManager.mediaBox, themeSettings: themeSettings, autoNightModeTriggered: autoNightModeTriggered, localizationSettings: localizationSettings, nameDisplayOrder: contactSettings.nameDisplayOrder, asteriSettings: asteriSettings)
                     }
                 } else {
                     return .complete()
@@ -868,7 +878,7 @@ public func updatedPresentationData(accountManager: AccountManager<TelegramAccou
                         
                         let chatBubbleCorners = PresentationChatBubbleCorners(settings: themeSettings.chatBubbleSettings)
                         
-                        return PresentationData(strings: stringsValue, theme: themeValue, autoNightModeTriggered: autoNightModeTriggered, chatWallpaper: effectiveChatWallpaper, chatFontSize: chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, nameSortOrder: nameSortOrder, reduceMotion: themeSettings.reduceMotion, largeEmoji: themeSettings.largeEmoji)
+                        return PresentationData(strings: stringsValue, theme: themeValue, autoNightModeTriggered: autoNightModeTriggered, chatWallpaper: effectiveChatWallpaper, chatFontSize: chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, nameSortOrder: nameSortOrder, reduceMotion: themeSettings.reduceMotion, largeEmoji: themeSettings.largeEmoji, asteriSettings: asteriSettings)
                     }
                 } else {
                     return .complete()
@@ -880,7 +890,7 @@ public func updatedPresentationData(accountManager: AccountManager<TelegramAccou
 
 // The presentation data with bubble mode off: the bubble-free theme on its plain page. Strings, formats, font sizes and
 // corners as with bubbles; no wallpaper or service colour is read.
-private func bubblelessPresentationData(mediaBox: MediaBox, themeSettings: PresentationThemeSettings, autoNightModeTriggered: Bool, localizationSettings: LocalizationSettings?, nameDisplayOrder: PresentationPersonNameOrder) -> PresentationData {
+private func bubblelessPresentationData(mediaBox: MediaBox, themeSettings: PresentationThemeSettings, autoNightModeTriggered: Bool, localizationSettings: LocalizationSettings?, nameDisplayOrder: PresentationPersonNameOrder, asteriSettings: AsteriSettings) -> PresentationData {
     let theme = makeBubblelessPresentationTheme(mediaBox: mediaBox, themeSettings: themeSettings, autoNightModeTriggered: autoNightModeTriggered)
     
     let dateTimeFormat = currentDateTimeFormat()
@@ -896,7 +906,7 @@ private func bubblelessPresentationData(mediaBox: MediaBox, themeSettings: Prese
     
     let chatBubbleCorners = PresentationChatBubbleCorners(settings: themeSettings.chatBubbleSettings)
     
-    return PresentationData(strings: stringsValue, theme: theme, autoNightModeTriggered: autoNightModeTriggered, chatWallpaper: bubblelessChatWallpaper(theme: theme), chatFontSize: chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, nameSortOrder: nameSortOrder, reduceMotion: themeSettings.reduceMotion, largeEmoji: themeSettings.largeEmoji)
+    return PresentationData(strings: stringsValue, theme: theme, autoNightModeTriggered: autoNightModeTriggered, chatWallpaper: bubblelessChatWallpaper(theme: theme), chatFontSize: chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, nameSortOrder: nameSortOrder, reduceMotion: themeSettings.reduceMotion, largeEmoji: themeSettings.largeEmoji, asteriSettings: asteriSettings)
 }
 
 private func resolveFontSize(settings: PresentationThemeSettings) -> (chat: PresentationFontSize, lists: PresentationFontSize) {
@@ -929,15 +939,15 @@ public func defaultPresentationData() -> PresentationData {
 
 public extension PresentationData {
     func withFontSizes(chatFontSize: PresentationFontSize, listsFontSize: PresentationFontSize) -> PresentationData {
-        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji)
+        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: chatFontSize, chatBubbleCorners: self.chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji, asteriSettings: self.asteriSettings)
     }
     
     func withChatBubbleCorners(_ chatBubbleCorners: PresentationChatBubbleCorners) -> PresentationData {
-        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji)
+        return PresentationData(strings: self.strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji, asteriSettings: self.asteriSettings)
     }
     
     func withStrings(_ strings: PresentationStrings) -> PresentationData {
-        return PresentationData(strings: strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji)
+        return PresentationData(strings: strings, theme: self.theme, autoNightModeTriggered: self.autoNightModeTriggered, chatWallpaper: self.chatWallpaper, chatFontSize: self.chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: self.listsFontSize, dateTimeFormat: self.dateTimeFormat, nameDisplayOrder: self.nameDisplayOrder, nameSortOrder: self.nameSortOrder, reduceMotion: self.reduceMotion, largeEmoji: self.largeEmoji, asteriSettings: self.asteriSettings)
     }
 }
 

@@ -10,7 +10,7 @@ on:
         type: boolean
         default: false
       native_text:
-        description: Compile and test the isolated native Unicode prototype
+        description: Compile and test the production native feature utilities
         type: boolean
         default: false
 permissions:
@@ -43,18 +43,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-          sparse-checkout: prototypes/AsteriText
-      - name: Compile and test the native text prototype
+          sparse-checkout: submodules/AsteriFeatures
+      - name: Compile and test the native feature utilities
         run: |
           set -euo pipefail
           ASTERI_XCODE_VERSION=$(python3 -c 'import json; print(json.load(open("versions.json"))["xcode"])')
           sudo xcode-select -s "/Applications/Xcode_${ASTERI_XCODE_VERSION}.app/Contents/Developer"
           swift --version
-          swift test --package-path prototypes/AsteriText
-          swift test --configuration release --package-path prototypes/AsteriText
+          swift test --package-path submodules/AsteriFeatures
+          swift test --configuration release --package-path submodules/AsteriFeatures
           ASTERI_SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
           mkdir -p "$RUNNER_TEMP/asteri-text"
           xcrun --sdk iphoneos swiftc -sdk "$ASTERI_SDK_PATH" -target arm64-apple-ios15.0 \
-            -parse-as-library -emit-module -module-name AsteriText \
-            prototypes/AsteriText/Sources/AsteriText/ZalgoFilter.swift \
-            -emit-module-path "$RUNNER_TEMP/asteri-text/AsteriText.swiftmodule"
+            -parse-as-library -emit-module -module-name AsteriFeatures \
+            submodules/AsteriFeatures/Sources/AsteriFeatures/*.swift \
+            -emit-module-path "$RUNNER_TEMP/asteri-text/AsteriFeatures.swiftmodule"

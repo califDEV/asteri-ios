@@ -12,6 +12,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        "//submodules/AsteriFeatures",
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/Postbox:Postbox",
         "//submodules/Display:Display",

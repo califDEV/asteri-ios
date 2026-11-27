@@ -269,6 +269,9 @@ public final class TextSelectionNode: ASDisplayNode {
     private let present: (ViewController, Any?) -> Void
     private let rootView: () -> UIView?
     private let performAction: (NSAttributedString, TextSelectionAction) -> Void
+    /// Optional unfiltered source with the same UTF-16 length as the drawn text.
+    /// Geometry stays on the text node; copy/share/lookup use this source.
+    public var originalAttributedText: NSAttributedString?
     private var highlightOverlay: LinkHighlightingNode?
     private let leftKnob: ASImageNode
     private let rightKnob: ASImageNode
@@ -736,9 +739,10 @@ public final class TextSelectionNode: ASDisplayNode {
     }
     
     private func displayMenu() {
-        guard let currentRects = self.currentRects, !currentRects.isEmpty, let currentRange = self.currentRange, let attributedString = self.textNodeOrView.currentText else {
+        guard let currentRects = self.currentRects, !currentRects.isEmpty, let currentRange = self.currentRange, let renderedText = self.textNodeOrView.currentText else {
             return
         }
+        let attributedString = self.originalAttributedText.flatMap { $0.length == renderedText.length ? $0 : nil } ?? renderedText
         let range = NSRange(location: min(currentRange.0, currentRange.1), length: max(currentRange.0, currentRange.1) - min(currentRange.0, currentRange.1))
         var completeRect = currentRects[0]
         for i in 0 ..< currentRects.count {

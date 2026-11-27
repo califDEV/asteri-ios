@@ -37,6 +37,7 @@ private final class ThemeSettingsControllerArguments {
     let openAutoNightTheme: () -> Void
     let openTextSize: () -> Void
     let openBubbleSettings: () -> Void
+    let openAsteriSettings: () -> Void
     let openPowerSavingSettings: () -> Void
     let openStickersAndEmoji: () -> Void
     let toggleSendWithCmdEnter: (Bool) -> Void
@@ -59,6 +60,7 @@ private final class ThemeSettingsControllerArguments {
         openAutoNightTheme: @escaping () -> Void,
         openTextSize: @escaping () -> Void,
         openBubbleSettings: @escaping () -> Void,
+        openAsteriSettings: @escaping () -> Void,
         openPowerSavingSettings: @escaping () -> Void,
         openStickersAndEmoji: @escaping () -> Void,
         toggleSendWithCmdEnter: @escaping (Bool) -> Void,
@@ -80,6 +82,7 @@ private final class ThemeSettingsControllerArguments {
         self.openAutoNightTheme = openAutoNightTheme
         self.openTextSize = openTextSize
         self.openBubbleSettings = openBubbleSettings
+        self.openAsteriSettings = openAsteriSettings
         self.openPowerSavingSettings = openPowerSavingSettings
         self.openStickersAndEmoji = openStickersAndEmoji
         self.toggleSendWithCmdEnter = toggleSendWithCmdEnter
@@ -143,6 +146,7 @@ private enum ThemeSettingsControllerEntry: ItemListNodeEntry {
     case sendWithCmdEnter(PresentationTheme, String, Bool)
     case showNextMediaOnTap(PresentationTheme, String, Bool)
     case showNextMediaOnTapInfo(PresentationTheme, String)
+    case asteri(PresentationTheme)
     
     var section: ItemListSectionId {
         switch self {
@@ -156,7 +160,7 @@ private enum ThemeSettingsControllerEntry: ItemListNodeEntry {
                 return ThemeSettingsControllerSection.icon.rawValue
             case .powerSaving, .stickersAndEmoji:
                 return ThemeSettingsControllerSection.message.rawValue
-            case .otherHeader, .sendWithCmdEnter, .showNextMediaOnTap, .showNextMediaOnTapInfo:
+            case .otherHeader, .sendWithCmdEnter, .showNextMediaOnTap, .showNextMediaOnTapInfo, .asteri:
                 return ThemeSettingsControllerSection.other.rawValue
         }
     }
@@ -201,11 +205,16 @@ private enum ThemeSettingsControllerEntry: ItemListNodeEntry {
             return 17
         case .showNextMediaOnTapInfo:
             return 18
+        case .asteri:
+            return 19
         }
     }
     
     static func ==(lhs: ThemeSettingsControllerEntry, rhs: ThemeSettingsControllerEntry) -> Bool {
         switch lhs {
+            case let .asteri(lhsTheme):
+                if case let .asteri(rhsTheme) = rhs { return lhsTheme === rhsTheme }
+                return false
             case let .chatPreview(lhsTheme, lhsWallpaper, lhsFontSize, lhsChatBubbleCorners, lhsStrings, lhsTimeFormat, lhsNameOrder, lhsItems):
                 if case let .chatPreview(rhsTheme, rhsWallpaper, rhsFontSize, rhsChatBubbleCorners, rhsStrings, rhsTimeFormat, rhsNameOrder, rhsItems) = rhs, lhsTheme === rhsTheme, lhsWallpaper == rhsWallpaper, lhsFontSize == rhsFontSize, lhsChatBubbleCorners == rhsChatBubbleCorners, lhsStrings === rhsStrings, lhsTimeFormat == rhsTimeFormat, lhsNameOrder == rhsNameOrder, lhsItems == rhsItems {
                     return true
@@ -382,6 +391,10 @@ private enum ThemeSettingsControllerEntry: ItemListNodeEntry {
                 return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: nil, title: text, label: value, labelStyle: .text, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
                     arguments.openBubbleSettings()
                 })
+            case .asteri:
+                return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: nil, title: "Asteri", label: "", labelStyle: .text, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
+                    arguments.openAsteriSettings()
+                })
             case let .themeListHeader(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .iconHeader(_, text):
@@ -517,6 +530,7 @@ private func themeSettingsControllerEntries(
     }
     entries.append(.showNextMediaOnTap(presentationData.theme, strings.Appearance_ShowNextMediaOnTap, mediaSettings.showNextMediaOnTap))
     entries.append(.showNextMediaOnTapInfo(presentationData.theme, strings.Appearance_ShowNextMediaOnTapInfo))
+    entries.append(.asteri(presentationData.theme))
     
     return entries
 }
@@ -634,6 +648,8 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
             let settings = view.entries[ApplicationSpecificSharedDataKeys.presentationThemeSettings]?.get(PresentationThemeSettings.self) ?? PresentationThemeSettings.defaultSettings
             pushControllerImpl?(BubbleSettingsController(context: context, presentationThemeSettings: settings))
         })
+    }, openAsteriSettings: {
+        pushControllerImpl?(makeAsteriSettingsController(context: context))
     }, openPowerSavingSettings: {
         pushControllerImpl?(energySavingSettingsScreen(context: context))
     }, openStickersAndEmoji: {

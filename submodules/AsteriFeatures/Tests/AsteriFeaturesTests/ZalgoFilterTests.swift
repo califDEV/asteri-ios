@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-import AsteriText
+import AsteriFeatures
 
 final class ZalgoFilterTests: XCTestCase {
     private let joiner = "\u{2060}"

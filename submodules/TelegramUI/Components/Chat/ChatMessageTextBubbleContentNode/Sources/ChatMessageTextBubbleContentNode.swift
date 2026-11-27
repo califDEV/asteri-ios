@@ -1,4 +1,5 @@
 import Foundation
+import AsteriFeatures
 import UIKit
 import AsyncDisplayKit
 import Display
@@ -71,6 +72,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
     private var textHighlightingNodes: [LinkHighlightingNode] = []
     
     private var cachedChatMessageText: CachedChatMessageText?
+    private var asteriDisplayText: AsteriDisplayText?
     
     private var textSelectionState: Promise<ChatControllerSubject.MessageOptionsInfo.SelectionState>?
     
@@ -595,6 +597,8 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     attributedText = NSAttributedString(string: " ", font: textFont, textColor: messageTheme.primaryTextColor)
                 }
                 
+                let asteriDisplayText = AsteriDisplayText(source: attributedText, filterZalgo: item.presentationData.asteriSettings.filterZalgo)
+
                 // The custom-emoji attribute is not re-applied here: `stringWithAppliedEntities`
                 // already attached it, using ranges adjusted for the substitutions it performs
                 // (`.FormattedDate` renders to text of a different length). An entity's own offsets
@@ -648,7 +652,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                 
                 let textInsets = UIEdgeInsets(top: 2.0, left: 2.0, bottom: 5.0, right: 2.0)
                 let (textLayout, textApply) = textLayout(InteractiveTextNodeLayoutArguments(
-                    attributedString: attributedText,
+                    attributedString: asteriDisplayText.rendered,
                     backgroundColor: nil,
                     maximumNumberOfLines: maximumNumberOfLines,
                     truncationType: .end,
@@ -760,6 +764,8 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     return (boundingSize, { [weak self] animation, synchronousLoads, itemApply in
                         if let strongSelf = self {
                             strongSelf.item = item
+                            strongSelf.asteriDisplayText = asteriDisplayText
+                            strongSelf.textSelectionNode?.originalAttributedText = asteriDisplayText.source
                             if let updatedCachedChatMessageText = updatedCachedChatMessageText {
                                 strongSelf.cachedChatMessageText = updatedCachedChatMessageText
                             }
@@ -1635,6 +1641,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                     }
                     item.controllerInteraction.performTextSelectionAction(item.message, true, text, nil, action)
                 })
+                textSelectionNode.originalAttributedText = self.asteriDisplayText?.source
                 textSelectionNode.updateRange = { [weak self] selectionRange in
                     guard let strongSelf = self else {
                         return
@@ -1798,7 +1805,7 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
         guard let item = self.item else {
             return nil
         }
-        guard let string = self.textNode.attributedString else {
+        guard let string = self.asteriDisplayText?.source ?? self.textNode.attributedString else {
             return nil
         }
         

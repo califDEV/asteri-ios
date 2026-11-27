@@ -10,6 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        "//submodules/AsteriFeatures",
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
     ],

@@ -1,4 +1,5 @@
 import Foundation
+import AsteriFeatures
 import UIKit
 import Display
 import TelegramCore
@@ -33,6 +34,7 @@ public final class ChatPresentationData {
     public let chatBubbleCorners: PresentationChatBubbleCorners
     public let animatedEmojiScale: CGFloat
     public let isPreview: Bool
+    public let asteriSettings: AsteriSettings
     
     public let messageFont: UIFont
     public let messageEmojiFont: UIFont
@@ -45,7 +47,7 @@ public final class ChatPresentationData {
     /// Built here: layouts read this object from several threads, so it is not lazy.
     public let messageTextFonts: ChatMessageTextFonts?
 
-    public init(theme: ChatPresentationThemeData, fontSize: PresentationFontSize, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, disableAnimations: Bool, largeEmoji: Bool, chatBubbleCorners: PresentationChatBubbleCorners, animatedEmojiScale: CGFloat = 1.0, isPreview: Bool = false) {
+    public init(theme: ChatPresentationThemeData, fontSize: PresentationFontSize, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, disableAnimations: Bool, largeEmoji: Bool, chatBubbleCorners: PresentationChatBubbleCorners, animatedEmojiScale: CGFloat = 1.0, isPreview: Bool = false, asteriSettings: AsteriSettings = .defaultSettings) {
         self.theme = theme
         self.fontSize = fontSize
         self.strings = strings
@@ -55,6 +57,7 @@ public final class ChatPresentationData {
         self.chatBubbleCorners = chatBubbleCorners
         self.largeEmoji = largeEmoji
         self.isPreview = isPreview
+        self.asteriSettings = asteriSettings
         
         let baseFontSize = fontSize.baseDisplaySize
         self.messageFont = Font.regular(baseFontSize)
@@ -111,13 +114,14 @@ public final class ChatPresentationData {
             largeEmoji: self.largeEmoji,
             chatBubbleCorners: self.chatBubbleCorners,
             animatedEmojiScale: self.animatedEmojiScale,
-            isPreview: self.isPreview
+            isPreview: self.isPreview,
+            asteriSettings: self.asteriSettings
         )
     }
 }
 
 extension ChatPresentationData {
     public convenience init(presentationData: PresentationData) {
-        self.init(theme: ChatPresentationThemeData(theme: presentationData.theme, wallpaper: presentationData.chatWallpaper), fontSize: presentationData.chatFontSize, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameDisplayOrder: presentationData.nameDisplayOrder, disableAnimations: true, largeEmoji: presentationData.largeEmoji, chatBubbleCorners: presentationData.chatBubbleCorners)
+        self.init(theme: ChatPresentationThemeData(theme: presentationData.theme, wallpaper: presentationData.chatWallpaper), fontSize: presentationData.chatFontSize, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameDisplayOrder: presentationData.nameDisplayOrder, disableAnimations: true, largeEmoji: presentationData.largeEmoji, chatBubbleCorners: presentationData.chatBubbleCorners, asteriSettings: presentationData.asteriSettings)
     }
 }

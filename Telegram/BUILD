@@ -342,7 +342,7 @@ alternate_icon_folders = [
     "PremiumTurbo",
 ]
 
-composer_icon_folders = ["Telegram"]
+composer_icon_folders = ["Asteri"]
 
 [
     filegroup(
@@ -1698,11 +1698,11 @@ plist_fragment(
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Telegram</string>
+    <string>Asteri</string>
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Asteri</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -1925,9 +1925,7 @@ ios_application(
         ":UrlTypesInfoPlist",
     ],
     app_icons = [ ":{}_icon".format(name) for name in composer_icon_folders ],
-    alternate_icons = [
-        ":{}".format(name) for name in alternate_icon_folders
-    ],
+    alternate_icons = [],
     resources = [
         ":LaunchScreen",
         #":DefaultAppIcon",

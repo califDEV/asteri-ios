@@ -70,6 +70,8 @@ private enum ApplicationSpecificSharedDataKeyValues: Int32 {
 }
 
 public struct ApplicationSpecificSharedDataKeys {
+    // Fork-owned range, kept away from upstream's sequential allocations.
+    public static let asteriSettings: EngineDataBuffer = applicationSpecificSharedDataKey(100_000)
     public static let inAppNotificationSettings: EngineDataBuffer = applicationSpecificSharedDataKey(ApplicationSpecificSharedDataKeyValues.inAppNotificationSettings.rawValue)
     public static let presentationPasscodeSettings: EngineDataBuffer = applicationSpecificSharedDataKey(ApplicationSpecificSharedDataKeyValues.presentationPasscodeSettings.rawValue)
     public static let automaticMediaDownloadSettings: EngineDataBuffer = applicationSpecificSharedDataKey(ApplicationSpecificSharedDataKeyValues.automaticMediaDownloadSettings.rawValue)

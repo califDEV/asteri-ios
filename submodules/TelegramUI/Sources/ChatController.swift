@@ -6860,6 +6860,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
                 let previousTheme = strongSelf.presentationData.theme
                 let previousStrings = strongSelf.presentationData.strings
                 let previousChatWallpaper = strongSelf.presentationData.chatWallpaper
+                let previousAsteriSettings = strongSelf.presentationData.asteriSettings
                 
                 var chatTheme = chatTheme
                 if let chatThemePreview {
@@ -7035,7 +7036,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
                 
                 let previousChatTheme = currentChatTheme.swap((chatTheme, useDarkAppearance))
                 
-                if isFirstTime || previousTheme != presentationData.theme || previousStrings !== presentationData.strings || presentationData.chatWallpaper != previousChatWallpaper {
+                if isFirstTime || previousTheme != presentationData.theme || previousStrings !== presentationData.strings || presentationData.chatWallpaper != previousChatWallpaper || previousAsteriSettings != presentationData.asteriSettings {
                     strongSelf.themeAndStringsUpdated()
                     
                     controllerInteraction.updatedPresentationData = strongSelf.updatedPresentationData
