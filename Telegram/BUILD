@@ -356,6 +356,7 @@ composer_icon_folders = ["Asteri"]
 [
     filegroup(
         name = "{}_icon".format(name),
+        visibility = ["//Tests:__subpackages__"],
         srcs = glob([
             "Telegram-iOS/{}.icon/**/*".format(name),
         ]),

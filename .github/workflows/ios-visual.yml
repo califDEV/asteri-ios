@@ -1,0 +1,49 @@
+name: Asteri native visual checks
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: xcode-27
+    timeout-minutes: 180
+    env:
+      BUILD_MODE: simulator
+      TELEGRAM_BUILD_CONFIGURATION: ${{ secrets.TELEGRAM_BUILD_CONFIGURATION }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check pinned Xcode and recording tools
+        run: |
+          set -euo pipefail
+          python3 scripts/asteri/build.py preflight
+          if ! command -v ffmpeg || ! command -v ffprobe; then
+            brew install ffmpeg
+          fi
+          ffprobe -version
+      - name: Checkout pinned dependencies
+        run: |
+          set -euo pipefail
+          git submodule sync --recursive
+          git -c 'lfs.fetchexclude=examples/swift/WalletEngineAppUITests/Snapshots/**,examples/web/e2e/scenarios/snapshots/**' submodule update --init --recursive --depth=1 --jobs=4
+      - uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/asteri-bazel-repository
+          key: bazel-repository-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock', '.gitmodules') }}
+          restore-keys: bazel-repository-${{ runner.os }}-${{ runner.arch }}-
+      - name: Build real native settings and record scenarios
+        run: python3 -u scripts/asteri/visual.py
+      - name: Save original recording and timestamped frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asteri-visual-${{ github.run_id }}
+          path: build/asteri/
+          retention-days: 7
+      - name: Remove private build configuration
+        if: always()
+        run: python3 scripts/asteri/build.py cleanup
