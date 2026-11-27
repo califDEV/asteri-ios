@@ -1,10 +1,10 @@
 {
   "filterZalgo": {
     "description": "Display sanitation of excessive combining marks and bidi controls; preserves UTF-16 ranges and attributed runs",
-    "analog": "[AsteriText Swift/Foundation prototype](../prototypes/AsteriText/Sources/AsteriText/ZalgoFilter.swift)",
-    "plan": "Integrate at presentation-only iOS seams with persistent setting after a verified base build; check displayed frames",
-    "implementation": "Native prototype implemented; app integration pending",
-    "testing": "[10 native scenarios passed in debug and release; module compiled for ARM64 iOS 15.0 SDK](https://github.com/califDEV/asteri-ios/actions/runs/45712163625); source f72a7b4059",
-    "limitations": "iOS app/device integration, OS Unicode-category differences, visual and performance checks pending"
+    "analog": "[AsteriFeatures](../submodules/AsteriFeatures/Sources/AsteriFeatures/ZalgoFilter.swift), text-bubble rendering and Appearance → Asteri",
+    "plan": "Complete full app compilation, recorded settings frames, real app launch and physical-device checks; extend to other display surfaces separately",
+    "implementation": "Integrated in app source with AccountManager persistence and source-preserving text selection; validation in progress",
+    "testing": "[14 native scenarios passed in debug and release; production module compiled for ARM64 iOS 15.0 SDK](https://github.com/califDEV/asteri-ios/actions/runs/46072817558); app source e2c899f972; full build/visual runs pending",
+    "limitations": "Only text/captions handled by the text-bubble node; other emoji-rendered surfaces, OS Unicode-category differences, real-chat visuals and physical-device behavior pending"
   }
 }

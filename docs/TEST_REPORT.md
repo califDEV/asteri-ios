@@ -1,5 +1,15 @@
 # Test report
 
+2026-11-28 update: [46072817558](https://github.com/califDEV/asteri-ios/actions/runs/46072817558)
+passed 14 native Swift scenarios in debug and release and compiled the production
+AsteriFeatures module with the iPhoneOS SDK. Source: `e2c899f972`.
+Full ARM64 device build [46072841362](https://github.com/califDEV/asteri-ios/actions/runs/46072841362),
+recorded native settings [46073421695](https://github.com/califDEV/asteri-ios/actions/runs/46073421695)
+and real-app simulator startup [46073807245](https://github.com/califDEV/asteri-ios/actions/runs/46073807245)
+are in progress. The owner reports that the previously supplied baseline installed but
+did not start; symptom, signing method and on-device crash evidence are pending. No fix
+for that device is claimed from source inspection or these pending jobs.
+
 Checks from 2026-11-25–26, Windows development host and GitHub macOS runners.
 Device behavior remains untested; the real device-targeted application compiled successfully.
 

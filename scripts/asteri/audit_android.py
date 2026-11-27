@@ -93,13 +93,13 @@ def source_link(commit, path, line=None):
 
 def matrix(data, statuses=None):
     statuses = statuses or {}
-    lines = ['# Feature matrix — source discovery and native prototypes', '',
+    lines = ['# Feature matrix — source discovery and native integration', '',
              f'Android pin: `{data["android_commit"]}`. Official comparison: `{data["official_commit"]}`.', '',
              'This reproducible inventory covers delegated preferences in ExteraConfig, AiConfig, DebugConfig',
              'and PillStackConfig. A source reference',
              'may be an import, UI binding or behavior; it is not proof that the behavior was audited end to end.',
              'Additional subsystems and non-preference functions are tracked in ANDROID_ANALYSIS.md.',
-             'Phase 2 remains in progress. Native prototype results are recorded separately from app integration.',
+             'Phase 2 remains in progress. Native utility tests, app integration and device evidence are tracked separately.',
              'No row is claimed as a completed, device-tested iOS feature port.', '',
              '| Feature / key | Description | Android source | Dependencies / source references | Telegram-iOS analog | Port plan | Implementation | Testing | iOS limitations |',
              '|---|---|---|---|---|---|---|---|---|']

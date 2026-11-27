@@ -1,13 +1,14 @@
 # Known limitations and current evidence
 
-Updated 2026-11-26. This is an incomplete port, not a release-ready client.
+Updated 2026-11-28. This is an incomplete port, not a release-ready client.
 
 A real unsigned ARM64 baseline IPA was compiled and inspected in successful
 [run 45715952913](https://github.com/califDEV/asteri-ios/actions/runs/45715952913).
 It requires iOS 15.0+ and signing before installation. See TEST_REPORT for exact evidence.
 
-- No exteraGram-specific behavior is implemented in the iOS application yet. Phase 3
-  (verified base compilation) precedes large feature ports by requirement.
+- Zalgo protection is integrated in the application source, with a shared persistent
+  setting and native screen. Fourteen native scenarios passed; new full-app and recorded
+  visual checks are running. This does not establish feature parity or device behavior.
 - Android audit includes matching-release file comparison and a 206-preference source
   inventory; exhaustive semantic/behavioral/resource/network audit remains open.
 - Device-targeted compilation passed. Simulator launch, login, chats, sending/receiving, voice/media, themes,
@@ -15,8 +16,10 @@ It requires iOS 15.0+ and signing before installation. See TEST_REPORT for exact
   Infrastructure unit tests establish none of these app behaviors.
 - No iOS Plugin Engine, Python runtime or existing-plugin execution is implemented.
   Java/Xposed/ART hooks are unsupported as written; full compatibility is not claimed.
-- Application name/icons still reflect the upstream baseline. Asteri is the independent
-  working identity; final branding and attribution must be integrated before publication.
+- The published baseline retains upstream identity. The new source uses Asteri's own
+  name and vector icon, omits upstream alternate app icons, and includes attribution.
+- The owner reported that the previous IPA installed but did not start. Exact symptom,
+  signing method and crash evidence are pending; no physical-device startup fix is claimed.
 - Unsigned IPA installation is not automatic. Full Telegram App Groups/extensions/push
   capabilities may not be available under a free Apple account; paid signing material
   has not been supplied. No certificate or Apple service has been purchased.
