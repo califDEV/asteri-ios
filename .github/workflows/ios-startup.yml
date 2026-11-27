@@ -1,0 +1,45 @@
+name: Replay compiled standalone startup
+on:
+  workflow_dispatch:
+    inputs:
+      simulator_run:
+        description: Run ID containing a compiled standalone simulator IPA
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  startup:
+    runs-on: xcode-27
+    timeout-minutes: 25
+    env:
+      PARENT_RUN_ID: ${{ inputs.simulator_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check recording tools
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg || ! command -v ffprobe; then
+            brew install ffmpeg
+          fi
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.simulator_run }}
+          name: asteri-simulator-${{ inputs.simulator_run }}
+          path: build-input/recheck-artifacts
+      - name: Verify immutable IPA and record real launch and missing-group UI
+        run: python3 -u scripts/asteri/recheck_startup.py
+      - name: Save original recordings and timestamped frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asteri-startup-${{ github.run_id }}
+          path: build/asteri/
+          retention-days: 7
