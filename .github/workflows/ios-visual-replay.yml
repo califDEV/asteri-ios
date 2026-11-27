@@ -1,0 +1,45 @@
+name: Replay compiled native settings
+on:
+  workflow_dispatch:
+    inputs:
+      harness_run:
+        description: Run ID with retained AsteriHarness.ipa and its inspection report
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  replay:
+    runs-on: xcode-27
+    timeout-minutes: 25
+    env:
+      PARENT_RUN_ID: ${{ inputs.harness_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check recording tools
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg || ! command -v ffprobe; then
+            brew install ffmpeg
+          fi
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.harness_run }}
+          name: asteri-visual-${{ inputs.harness_run }}
+          path: build-input/harness-replay
+      - name: Verify the actual compiled harness and record production settings
+        run: python3 -u scripts/asteri/replay_visual.py
+      - name: Save original recording and timestamped frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asteri-visual-${{ github.run_id }}
+          path: build/asteri/
+          retention-days: 7

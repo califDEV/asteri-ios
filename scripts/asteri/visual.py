@@ -14,6 +14,7 @@ from pathlib import Path
 
 from build import ROOT, OUTPUT, PRIVATE, preflight, prepare, logged, write_json
 from inspect_ipa import inspect_ipa
+from simulator import create_simulator
 
 
 def run(*args):
@@ -59,18 +60,15 @@ def main():
     finally:
         if ipa.is_file():
             shutil.copy2(ipa, retained_ipa)
-    inspection = inspect_ipa(retained_ipa, 'simulator', 'org.asteri.VisualHarness', 'asteri-harness')
+    record_harness(retained_ipa, run('git', 'rev-parse', 'HEAD'))
+
+
+def record_harness(ipa, app_source):
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    PRIVATE.mkdir(parents=True, exist_ok=True)
+    inspection = inspect_ipa(ipa, 'simulator', 'org.asteri.VisualHarness', 'asteri-harness')
     write_json(OUTPUT / 'harness-inspection.json', inspection)
-    runtimes = json.loads(run('xcrun', 'simctl', 'list', 'runtimes', '-j'))['runtimes']
-    runtime = max((r for r in runtimes if r.get('isAvailable') and '.iOS-' in r['identifier']),
-                  key=lambda r: tuple(int(v) for v in r['version'].split('.')))
-    types = json.loads(run('xcrun', 'simctl', 'list', 'devicetypes', '-j'))['devicetypes']
-    device_type = next((d for name in ('iPhone 18 Pro', 'iPhone 17 Pro', 'iPhone 17')
-                        for d in types if d['name'] == name), None)
-    if device_type is None:
-        raise ValueError('No suitable iPhone simulator device type is installed')
-    device = run('xcrun', 'simctl', 'create', 'Asteri-QA-' + os.getenv('GITHUB_RUN_ID', 'local'),
-                 device_type['identifier'], runtime['identifier'])
+    device, runtime, device_type = create_simulator('Asteri-QA-' + os.getenv('GITHUB_RUN_ID', 'local'), ('iPhone 18 Pro', 'iPhone 17 Pro', 'iPhone 17'))
     recorder = None
     record_log = None
     bundle = 'org.asteri.VisualHarness'
@@ -140,7 +138,7 @@ def main():
             raise ValueError('Extracted frames do not match original ffprobe timestamps')
         write_json(OUTPUT / 'visual-scenarios.json', {
             'states': states, 'frames': count, 'runtime': runtime, 'device_type': device_type,
-            'source_commit': run('git', 'rev-parse', 'HEAD'), 'recorded': True,
+            'source_commit': app_source, 'test_source_commit': run('git', 'rev-parse', 'HEAD'), 'recorded': True,
             'human_frame_inspection': 'pending', 'real_chat_tested': False, 'device_tested': False,
         })
         print(f'Recorded {count} original video frames; inspect before claiming visual success.')

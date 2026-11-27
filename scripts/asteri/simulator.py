@@ -11,6 +11,26 @@ def run(*args):
     return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT).strip()
 
 
+def create_simulator(name, preferred_names=('iPhone 17', 'iPhone 18 Pro', 'iPhone 17 Pro')):
+    """Probe actual compatibility: device-specific runtimes can sort newest."""
+    runtimes = json.loads(run('xcrun', 'simctl', 'list', 'runtimes', '-j'))['runtimes']
+    runtimes = [r for r in runtimes if r.get('isAvailable') and '.iOS-' in r['identifier']
+                and int(r['version'].split('.')[0]) == 27]
+    runtimes.sort(key=lambda r: tuple(int(v) for v in r['version'].split('.')), reverse=True)
+    types = json.loads(run('xcrun', 'simctl', 'list', 'devicetypes', '-j'))['devicetypes']
+    attempts = []
+    for preferred in preferred_names:
+        for device_type in (d for d in types if d['name'] == preferred):
+            for runtime in runtimes:
+                result = subprocess.run(['xcrun', 'simctl', 'create', name,
+                                         device_type['identifier'], runtime['identifier']],
+                                        capture_output=True, text=True)
+                if result.returncode == 0:
+                    return result.stdout.strip(), runtime, device_type
+                attempts.append(f'{preferred} / {runtime["identifier"]}: {result.stderr.strip()}')
+    raise RuntimeError('No compatible installed iOS 27 simulator pair: ' + '; '.join(attempts))
+
+
 def smoke(ipa, bundle_id, private, output, exercise_missing_group=False):
     inspect_ipa(ipa, 'simulator', bundle_id)
     stage = private / 'simulator-app'
@@ -19,17 +39,7 @@ def smoke(ipa, bundle_id, private, output, exercise_missing_group=False):
     apps = list((stage / 'Payload').glob('*.app'))
     if len(apps) != 1:
         raise ValueError('Expected one simulator app')
-    runtimes = json.loads(run('xcrun', 'simctl', 'list', 'runtimes', '-j'))['runtimes']
-    minimum = plistlib.loads((apps[0] / 'Info.plist').read_bytes()).get('MinimumOSVersion', '15.0')
-    def version(value):
-        return tuple(int(p) for p in value.split('.'))
-    runtimes = [r for r in runtimes if r.get('isAvailable') and '.iOS-' in r['identifier']
-                and version(r['version']) >= version(minimum)]
-    if not runtimes:
-        raise ValueError('No available compatible iOS simulator runtime')
-    runtime = max(runtimes, key=lambda r: version(r['version']))
-    device = run('xcrun', 'simctl', 'create', 'Asteri CI',
-                 'com.apple.CoreSimulator.SimDeviceType.iPhone-17', runtime['identifier'])
+    device, runtime, _ = create_simulator('Asteri CI')
     recorder = None
     record_log = None
     try:
