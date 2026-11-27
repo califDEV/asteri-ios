@@ -1,0 +1,41 @@
+name: Native credential storage checks
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  security:
+    runs-on: xcode-27
+    timeout-minutes: 45
+    env:
+      BUILD_MODE: simulator
+      TELEGRAM_BUILD_CONFIGURATION: ${{ secrets.TELEGRAM_BUILD_CONFIGURATION }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Checkout pinned dependencies
+        run: |
+          set -euo pipefail
+          git submodule sync --recursive
+          git -c 'lfs.fetchexclude=examples/swift/WalletEngineAppUITests/Snapshots/**,examples/web/e2e/scenarios/snapshots/**' submodule update --init --recursive --depth=1 --jobs=4
+      - uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/asteri-bazel-repository
+          key: bazel-repository-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock', '.gitmodules') }}
+          restore-keys: bazel-repository-${{ runner.os }}-${{ runner.arch }}-
+      - name: Compile production credential storage and run native tests
+        run: python3 -u scripts/asteri/security_tests.py
+      - name: Save security evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asteri-security-${{ github.run_id }}
+          path: build/asteri/
+          retention-days: 7
+      - name: Remove private build configuration
+        if: always()
+        run: python3 scripts/asteri/build.py cleanup

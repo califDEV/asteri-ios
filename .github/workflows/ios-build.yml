@@ -11,12 +11,19 @@ on:
         description: Omit extensions for a limited sideload build
         type: boolean
         default: false
+      private_container:
+        description: Standalone Sideloadly variant; private storage, no extensions or App Groups
+        type: boolean
+        default: false
   workflow_call:
     inputs:
       mode:
         type: string
         default: unsigned
       disable_extensions:
+        type: boolean
+        default: false
+      private_container:
         type: boolean
         default: false
     secrets:
@@ -38,6 +45,7 @@ jobs:
     env:
       BUILD_MODE: ${{ inputs.mode }}
       DISABLE_EXTENSIONS: ${{ inputs.disable_extensions }}
+      PRIVATE_CONTAINER: ${{ inputs.private_container }}
       TELEGRAM_BUILD_CONFIGURATION: ${{ secrets.TELEGRAM_BUILD_CONFIGURATION }}
       IOS_SIGNING_ARCHIVE_BASE64: ${{ secrets.IOS_SIGNING_ARCHIVE_BASE64 }}
       IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}

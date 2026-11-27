@@ -138,6 +138,10 @@ def inspect_ipa(path, mode='unsigned', expected_bundle_id=None, expected_url_sch
                 result['build'] = info['CFBundleVersion']
                 result['minimum_ios'] = info['MinimumOSVersion']
                 result['url_schemes'] = schemes
+                result['private_container'] = info.get('AsteriPrivateContainer', False)
+                result['display_name'] = info.get('CFBundleDisplayName')
+                if type(result['private_container']) is not bool:
+                    raise ValueError('Invalid private-container metadata')
             elif bundle.endswith('.appex'):
                 main_id = plistlib.loads(archive.read(f'{root}/Info.plist'))['CFBundleIdentifier']
                 if not identifier.startswith(main_id + '.'):

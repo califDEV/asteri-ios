@@ -52,11 +52,21 @@ def smoke(ipa, bundle_id, private, output):
             raise ValueError('App process exited after simulator launch')
         # The upstream app stops initialization with "Error 2" if its group container
         # cannot be resolved. Merely surviving as a process must not count as launch.
-        run('xcrun', 'simctl', 'get_app_container', device, bundle_id, 'group.' + bundle_id)
+        info = plistlib.loads((apps[0] / 'Info.plist').read_bytes())
+        if info.get('AsteriPrivateContainer') is True:
+            if list((apps[0] / 'PlugIns').glob('*.appex')):
+                raise ValueError('Standalone simulator build unexpectedly has app extensions')
+            from pathlib import Path
+            data = Path(run('xcrun', 'simctl', 'get_app_container', device, bundle_id, 'data'))
+            if not (data / 'Library/Application Support/Asteri').is_dir():
+                raise ValueError('Standalone app did not initialize its private data directory')
+        else:
+            run('xcrun', 'simctl', 'get_app_container', device, bundle_id, 'group.' + bundle_id)
         run('xcrun', 'simctl', 'io', device, 'screenshot', str(output / 'simulator-launch.png'))
         (output / 'simulator-smoke.json').write_text(json.dumps({
             'launch': launch, 'runtime': runtime['identifier'], 'device': device,
             'survived_seconds': 6, 'login_tested': False, 'device_tested': False,
+            'private_container': info.get('AsteriPrivateContainer') is True,
         }, indent=2) + '\n', encoding='utf-8')
     finally:
         if recorder is not None:

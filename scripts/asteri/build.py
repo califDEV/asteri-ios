@@ -27,8 +27,22 @@ def write_json(path, value):
 
 
 def configuration():
-    return validate_config(os.environ.get('TELEGRAM_BUILD_CONFIGURATION'),
-                           os.environ.get('BUILD_MODE', 'unsigned'))
+    mode = os.environ.get('BUILD_MODE', 'unsigned')
+    config = validate_config(os.environ.get('TELEGRAM_BUILD_CONFIGURATION'), mode)
+    if private_container():
+        if mode == 'signed':
+            raise ValueError('The private-container variant currently supports unsigned and simulator builds')
+        if not config['bundle_id'].endswith('.sideload'):
+            config['bundle_id'] += '.sideload'
+        config['app_specific_url_scheme'] = 'asteri-sideload'
+    return config
+
+
+def private_container():
+    value = os.getenv('PRIVATE_CONTAINER', 'false').lower()
+    if value not in {'true', 'false'}:
+        raise ValueError('PRIVATE_CONTAINER must be true or false')
+    return value == 'true'
 
 
 def preflight():
@@ -48,7 +62,8 @@ def preflight():
               'machine': platform.machine(), 'free_bytes': free,
               'source_commit': capture('git', 'rev-parse', 'HEAD'),
               'run_url': f'https://github.com/{os.getenv("GITHUB_REPOSITORY", "")}/actions/runs/{os.getenv("GITHUB_RUN_ID", "")}',
-              'mode': os.getenv('BUILD_MODE', 'unsigned'), 'device_tested': False}
+              'mode': os.getenv('BUILD_MODE', 'unsigned'), 'device_tested': False,
+              'private_container': private_container()}
     write_json(OUTPUT / 'provenance.json', report)
     print(json.dumps(report, indent=2), flush=True)
     if free < 12 * 1024**3:
@@ -82,6 +97,8 @@ def prepare():
                   'build --features=asteri.unsigned_archive']
     if os.getenv('DISABLE_EXTENSIONS', 'false').lower() == 'true':
         flags += ['build --//Telegram:disableExtensions']
+    if private_container():
+        flags += ['build --//Telegram:asteriPrivateContainer']
     (ROOT / 'build-input/asteri.bazelrc').write_text('\n'.join(flags) + '\n', encoding='utf-8')
     (OUTPUT / 'effective-bazelrc.txt').write_text('\n'.join(flags) + '\n', encoding='utf-8')
     return config, config_path
@@ -127,6 +144,11 @@ def build():
     if config['app_specific_url_scheme'] not in schemes:
         raise ValueError('Generated URL metadata is missing the configured app URL scheme')
     write_json(OUTPUT / 'metadata-inspection.json', {'url_schemes': schemes})
+    logged(command + ['--target', '//Telegram:AsteriStorageInfoPlist'],
+           'storage-metadata.log', (config['api_hash'],))
+    storage_metadata = plistlib.loads((ROOT / 'bazel-bin/Telegram/AsteriStorageInfoPlist.plist').read_bytes())
+    if storage_metadata.get('AsteriPrivateContainer') is not private_container():
+        raise ValueError('Generated storage metadata does not match the requested build variant')
     ipa = ROOT / 'bazel-bin/Telegram/Telegram.ipa'
     unverified = OUTPUT / 'unverified-compiled.ipa'
     try:
@@ -139,10 +161,14 @@ def build():
     if not unverified.is_file():
         raise ValueError('Official build did not produce bazel-bin/Telegram/Telegram.ipa')
     inspection = inspect_ipa(unverified, mode, config['bundle_id'], config['app_specific_url_scheme'])
+    if inspection['private_container'] is not private_container():
+        raise ValueError('Compiled app has the wrong storage mode')
+    if private_container() and any(b['path'].endswith('.appex') for b in inspection['bundles']):
+        raise ValueError('Private-container variant must not contain app extensions')
     if mode == 'signed':
         from signing import verify_signing
         verify_signing(unverified, PRIVATE, inspection, config['team_id'])
-    inspection['extensions_disabled'] = os.getenv('DISABLE_EXTENSIONS', 'false').lower() == 'true'
+    inspection['extensions_disabled'] = private_container() or os.getenv('DISABLE_EXTENSIONS', 'false').lower() == 'true'
     write_json(OUTPUT / 'ipa-inspection.json', inspection)
     target = OUTPUT / 'Asteri.ipa'
     unverified.replace(target)

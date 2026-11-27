@@ -90,6 +90,35 @@ bool_flag(
     visibility = ["//visibility:public"],
 )
 
+bool_flag(
+    name = "asteriPrivateContainer",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "asteriPrivateContainerSetting",
+    flag_values = {":asteriPrivateContainer": "True"},
+)
+
+plist_fragment(
+    name = "AsteriStorageInfoPlist",
+    extension = "plist",
+    template = select({
+        ":asteriPrivateContainerSetting": "<key>AsteriPrivateContainer</key><true/>",
+        "//conditions:default": "<key>AsteriPrivateContainer</key><false/>",
+    }),
+)
+
+plist_fragment(
+    name = "AsteriPrivateEntitlements",
+    extension = "entitlements",
+    template = """
+    <key>application-identifier</key><string>{team}.{bundle}</string>
+    <key>keychain-access-groups</key><array><string>{team}.{bundle}</string></array>
+    """.format(team = telegram_team_id, bundle = telegram_bundle_id),
+)
+
 config_setting(
     name = "disableExtensionsSetting",
     flag_values = {
@@ -1917,13 +1946,17 @@ ios_application(
         ":disableProvisioningProfilesSetting": None,
         "//conditions:default": ":Telegram_xcode_profile" if telegram_use_xcode_managed_codesigning else "@build_configuration//provisioning:Telegram.mobileprovision",
     }),
-    entitlements = ":TelegramEntitlements.entitlements",
+    entitlements = select({
+        ":asteriPrivateContainerSetting": ":AsteriPrivateEntitlements.entitlements",
+        "//conditions:default": ":TelegramEntitlements.entitlements",
+    }),
     infoplists = [
         ":TelegramInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
         ":UrlTypesInfoPlist",
+        ":AsteriStorageInfoPlist",
     ],
     app_icons = [ ":{}_icon".format(name) for name in composer_icon_folders ],
     alternate_icons = [],
@@ -1942,6 +1975,7 @@ ios_application(
         ":AppStringResources",
     ],
     extensions = select({
+        ":asteriPrivateContainerSetting": [],
         ":disableExtensionsSetting": [],
         "//conditions:default": [
             ":ShareExtension",

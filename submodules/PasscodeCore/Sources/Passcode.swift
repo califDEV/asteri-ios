@@ -5,6 +5,10 @@ import Darwin
 import SwiftSignalKit
 
 public struct PasscodeConfiguration: Equatable, Sendable {
+    public enum CredentialStorage: Equatable, Sendable {
+        case sharedAppGroup
+        case privateApplication
+    }
     public enum ProcessRole: Equatable, Sendable {
         case mainApp
         case appExtension
@@ -14,12 +18,14 @@ public struct PasscodeConfiguration: Equatable, Sendable {
     public let processRole: ProcessRole
     public let biometricKeychainService: String?
     public let keychainScope: String?
+    public let credentialStorage: CredentialStorage
 
-    public init(appGroupIdentifier: String, processRole: ProcessRole, biometricKeychainService: String? = nil, keychainScope: String? = nil) {
+    public init(appGroupIdentifier: String, processRole: ProcessRole, biometricKeychainService: String? = nil, keychainScope: String? = nil, credentialStorage: CredentialStorage = .sharedAppGroup) {
         self.appGroupIdentifier = appGroupIdentifier
         self.processRole = processRole
         self.biometricKeychainService = biometricKeychainService
         self.keychainScope = keychainScope
+        self.credentialStorage = credentialStorage
     }
 }
 
@@ -38,6 +44,9 @@ public final class PasscodeEnvironment: @unchecked Sendable {
     public func configure(_ configuration: PasscodeConfiguration, privateAccessGroup: (() -> String?)? = nil) throws {
         self.mutex.lock()
         defer { self.mutex.unlock() }
+        guard configuration.credentialStorage != .privateApplication || configuration.processRole == .mainApp else {
+            throw PasscodeError.unavailable
+        }
         #if os(macOS)
         guard !configuration.appGroupIdentifier.isEmpty, configuration.appGroupIdentifier.contains(".") else {
             throw PasscodeError.unavailable
@@ -72,8 +81,21 @@ public final class PasscodeEnvironment: @unchecked Sendable {
     public func sharedAccessGroup() throws -> String {
         self.mutex.lock()
         defer { self.mutex.unlock() }
-        guard let configuration = self.configuration else { throw PasscodeError.unavailable }
+        guard let configuration = self.configuration, configuration.credentialStorage == .sharedAppGroup else { throw PasscodeError.unavailable }
         return configuration.appGroupIdentifier
+    }
+
+    /// A standalone app stores credentials in its own validated keychain group.
+    /// Shared-group callers keep failing closed when no shared storage is configured.
+    public func credentialAccessGroup() throws -> String {
+        self.mutex.lock()
+        let configuration = self.configuration
+        self.mutex.unlock()
+        guard let configuration else { throw PasscodeError.unavailable }
+        switch configuration.credentialStorage {
+        case .sharedAppGroup: return try self.sharedAccessGroup()
+        case .privateApplication: return try self.privateAccessGroup()
+        }
     }
 
     func biometricKeychainService() throws -> String {
@@ -124,7 +146,7 @@ final class PasscodeKeychain: PasscodeStorage {
             kSecAttrSynchronizable as String: false
         ]
         #if !os(macOS)
-        query[kSecAttrAccessGroup as String] = try account.hasPrefix("biometric.") ? self.environment.privateAccessGroup() : self.environment.sharedAccessGroup()
+        query[kSecAttrAccessGroup as String] = try account.hasPrefix("biometric.") ? self.environment.privateAccessGroup() : self.environment.credentialAccessGroup()
         #endif
         return query
     }

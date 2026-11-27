@@ -305,6 +305,42 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
     private let firebaseRequestVerificationSecretStream = Promise<[String: String]>([:])
     
     private var urlSessions: [URLSession] = []
+
+    private var usesPrivateContainer: Bool {
+        return Bundle.main.object(forInfoDictionaryKey: "AsteriPrivateContainer") as? Bool == true
+    }
+
+    /// Fatal launch errors must be visible even before Window1 has a root controller.
+    private func presentStorageStartupFailure() {
+        let controller = UIViewController()
+        controller.view.backgroundColor = .systemBackground
+        let title = UILabel()
+        title.text = "Asteri"
+        title.font = .preferredFont(forTextStyle: .largeTitle)
+        title.textAlignment = .center
+        let explanation = UILabel()
+        explanation.numberOfLines = 0
+        explanation.font = .preferredFont(forTextStyle: .body)
+        explanation.textAlignment = .center
+        let russian = Locale.preferredLanguages.first?.hasPrefix("ru") == true
+        if self.usesPrivateContainer {
+            explanation.text = russian ? "Не удалось открыть защищённое хранилище. Проверьте подпись приложения и перезапустите его." : "Secure storage could not be opened. Check the application's signing and restart it."
+        } else {
+            explanation.text = russian ? "Этой сборке требуется доступ к App Groups. Для установки через Sideloadly используйте сборку Asteri Sideload." : "This build requires App Groups. For installation with Sideloadly, use the Asteri Sideload build."
+        }
+        let stack = UIStackView(arrangedSubviews: [title, explanation])
+        stack.axis = .vertical
+        stack.spacing = 20
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        controller.view.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.leadingAnchor.constraint(equalTo: controller.view.readableContentGuide.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: controller.view.readableContentGuide.trailingAnchor),
+            stack.centerYAnchor.constraint(equalTo: controller.view.safeAreaLayoutGuide.centerYAnchor),
+        ])
+        self.window?.rootViewController = controller
+        self.window?.makeKeyAndVisible()
+    }
     private func urlSession(identifier: String) -> URLSession {
         if let existingSession = self.urlSessions.first(where: { $0.configuration.identifier == identifier }) {
             return existingSession
@@ -314,7 +350,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         let appGroupName = "group.\(baseAppBundleId)"
 
         let configuration = URLSessionConfiguration.background(withIdentifier: identifier)
-        configuration.sharedContainerIdentifier = appGroupName
+        configuration.sharedContainerIdentifier = self.usesPrivateContainer ? nil : appGroupName
         configuration.isDiscretionary = false
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: .main)
         self.urlSessions.append(session)
@@ -565,10 +601,29 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         
         let baseAppBundleId = Bundle.main.bundleIdentifier!
         let appGroupName = "group.\(baseAppBundleId)"
-        try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp, biometricKeychainService: walletBiometricKeychainService), privateAccessGroup: {
-            BuildConfig.keychainAccessGroup(baseAppBundleId: baseAppBundleId)
-        })
-        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
+        let maybeAppGroupUrl: URL?
+        do {
+            if self.usesPrivateContainer {
+                // This is an explicitly built standalone variant, never an automatic
+                // fallback that could hide an existing shared account database.
+                let extensions = Bundle.main.builtInPlugInsURL.flatMap { try? FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: nil) } ?? []
+                guard !extensions.contains(where: { $0.pathExtension == "appex" }) else {
+                    self.presentStorageStartupFailure()
+                    return true
+                }
+                let directory = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("Asteri", isDirectory: true)
+                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication])
+                maybeAppGroupUrl = directory
+            } else {
+                maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
+            }
+            try PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp, biometricKeychainService: walletBiometricKeychainService, credentialStorage: self.usesPrivateContainer ? .privateApplication : .sharedAppGroup), privateAccessGroup: {
+                BuildConfig.keychainAccessGroup(baseAppBundleId: baseAppBundleId)
+            })
+        } catch {
+            self.presentStorageStartupFailure()
+            return true
+        }
         
         let buildConfig = BuildConfig(baseAppBundleId: baseAppBundleId)
         self.buildConfig = buildConfig
@@ -692,7 +747,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         )
         
         guard let appGroupUrl = maybeAppGroupUrl else {
-            self.mainWindow?.presentNative(UIAlertController(title: nil, message: "Error 2", preferredStyle: .alert))
+            self.presentStorageStartupFailure()
             return true
         }
         
@@ -721,7 +776,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         } else {
             rootPath = rootPathForBasePath(appGroupUrl.path)
         }
-        if !isUITest {
+        if !isUITest && !self.usesPrivateContainer {
             performAppGroupUpgrades(appGroupPath: appGroupUrl.path, rootPath: rootPath)
         }
         
