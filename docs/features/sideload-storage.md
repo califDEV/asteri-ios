@@ -38,4 +38,5 @@ the real unauthenticated application UI, with no storage warning or blank settle
 The injected missing-group case shows the native Asteri heading and actionable Sideload
 instruction centered inside the content band. Both scenarios use the same compiled app;
 only a staging copy is changed for the failure case, with no delivery-IPA modification.
-Labels must remain readable against the system background and not overlap or clip.
+Labels must remain readable against the system background in light and dark appearance,
+without overlap or clipping.

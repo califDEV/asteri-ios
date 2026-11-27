@@ -139,6 +139,9 @@ def missing_group_scenario(app, device, bundle_id, private, output):
             if check.returncode == 0:
                 raise ValueError('Expected an unavailable shared container in the injected failure case')
             run('xcrun', 'simctl', 'io', device, 'screenshot', str(output / 'missing-group.png'))
+            run('xcrun', 'simctl', 'ui', device, 'appearance', 'dark')
+            time.sleep(1)
+            run('xcrun', 'simctl', 'io', device, 'screenshot', str(output / 'missing-group-dark.png'))
         finally:
             if recorder is not None:
                 recorder.send_signal(signal.SIGINT)
