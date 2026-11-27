@@ -1,0 +1,41 @@
+{
+  "tests": [
+    {
+      "name": "testDefaultModeStillRequiresTheSharedGroup",
+      "status": "run",
+      "result": "completed",
+      "time": "0.006"
+    },
+    {
+      "name": "testExtensionsCannotOptIntoPrivateApplicationStorage",
+      "status": "run",
+      "result": "completed",
+      "time": "0.001"
+    },
+    {
+      "name": "testPrivateCredentialsUseOnlyTheAppsOwnGroup",
+      "status": "run",
+      "result": "completed",
+      "time": "0.001"
+    },
+    {
+      "name": "testStorageModeCannotChangeAfterInitialization",
+      "status": "run",
+      "result": "completed",
+      "time": "0.001"
+    },
+    {
+      "name": "testUnavailablePrivateKeychainDoesNotFallBackToSharedOrUnscopedAccess",
+      "status": "run",
+      "result": "completed",
+      "time": "0.001"
+    }
+  ],
+  "passed": true,
+  "device_tested": false,
+  "source_files": [
+    "Passcode.swift",
+    "PasscodeCrypto.swift",
+    "PasscodeKeychainScope.swift"
+  ]
+}

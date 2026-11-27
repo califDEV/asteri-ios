@@ -29,7 +29,7 @@ It requires iOS 15.0+ and signing before installation. See TEST_REPORT for exact
 - The published full baseline requires `group.<bundle ID>` and stops initialization
   when its container is unavailable. The new explicit standalone variant uses private
   storage and its own keychain group, without extensions; normal shared-mode behavior
-  is retained. Builds and scope/launch tests are pending. Unavailable storage now has an
+  is retained. Five host scope tests passed; app builds/launch checks are pending. Unavailable storage now has an
   actionable error page in source; its recorded-frame verification is still pending.
 - Standard hosted runner memory/disk/time may constrain a cold build; actual logs decide
   feasibility. No paid runner or macOS VM is configured.

@@ -3,12 +3,24 @@
 2026-11-28 update: [46072817558](https://github.com/califDEV/asteri-ios/actions/runs/46072817558)
 passed 14 native Swift scenarios in debug and release and compiled the production
 AsteriFeatures module with the iPhoneOS SDK. Source: `e2c899f972`.
-Full ARM64 device build [46072841362](https://github.com/califDEV/asteri-ios/actions/runs/46072841362),
-recorded native settings [46073421695](https://github.com/califDEV/asteri-ios/actions/runs/46073421695)
-and real-app simulator startup [46073807245](https://github.com/califDEV/asteri-ios/actions/runs/46073807245)
-are in progress. The owner reports that the previously supplied baseline installed but
-did not start; symptom, signing method and on-device crash evidence are pending. No fix
-for that device is claimed from source inspection or these pending jobs.
+Five native credential-scope scenarios passed in
+[46076230161](https://github.com/califDEV/asteri-ios/actions/runs/46076230161), source `1344eab8ec`:
+shared-mode compatibility, own-group private routing, extension rejection, missing-access
+failure and immutable configuration. The host target compiles production passcode sources;
+macOS legacy API deprecations remain warnings as in the upstream SwiftPM suite. Production
+iOS compilation still treats warnings as errors. See `docs/builds/credential-scope-20261128/`.
+
+Current candidate source: `c7dcac2c8d2a8d5b9fd6d3e9c35a078faf7dd7d2`.
+Standalone ARM64 device build [46077397022](https://github.com/califDEV/asteri-ios/actions/runs/46077397022),
+real-app simulator startup [46077399833](https://github.com/califDEV/asteri-ios/actions/runs/46077399833)
+and recorded settings [46077402267](https://github.com/califDEV/asteri-ios/actions/runs/46077402267)
+are in progress. Earlier attempts were superseded before delivery to include the required
+visible upstream attribution link. The owner reports a black screen after baseline
+installation with Sideloadly on iOS 27. Physical-device startup is not yet validated.
+
+The first settings harness compiled successfully in 46073421695 but its postbuild
+inspection correctly rejected missing CFBundlePackageType=APPL. Source metadata is now
+corrected and checked before compilation; any real harness compiler output is retained.
 
 Checks from 2026-11-25–26, Windows development host and GitHub macOS runners.
 Device behavior remains untested; the real device-targeted application compiled successfully.
