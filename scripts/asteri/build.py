@@ -69,14 +69,17 @@ def prepare():
     flags = [f'build --repository_cache={cache}', 'build --jobs=2']
     mode = os.getenv('BUILD_MODE', 'unsigned')
     if mode != 'signed':
-        # Both flags are implemented by the pinned BUILD and rules_apple sources.
-        flags += ['build --//Telegram:disableProvisioningProfiles',
-                  'build --features=disable_legacy_signing']
+        flags += ['build --//Telegram:disableProvisioningProfiles']
+    if mode == 'simulator':
+        # Simulator ad-hoc signing needs no Apple credential and carries the app's
+        # real entitlements. Omitting signing loses App Groups during installation.
+        flags += ['build --features=apple.codesign_frameworks_without_provisioning_profile']
     if mode == 'unsigned':
         from unsigned import apply
         patch = apply(ROOT / 'build-system/bazel-rules/rules_apple/apple/internal/ios_rules.bzl')
         write_json(OUTPUT / 'unsigned-rules-patch.json', patch)
-        flags += ['build --features=asteri.unsigned_archive']
+        flags += ['build --features=disable_legacy_signing',
+                  'build --features=asteri.unsigned_archive']
     if os.getenv('DISABLE_EXTENSIONS', 'false').lower() == 'true':
         flags += ['build --//Telegram:disableExtensions']
     (ROOT / 'build-input/asteri.bazelrc').write_text('\n'.join(flags) + '\n', encoding='utf-8')

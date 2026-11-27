@@ -1,6 +1,7 @@
 """Login-free launch smoke test. Does not assert Telegram account functionality."""
 import json
 import plistlib
+import signal
 import subprocess
 import time
 from inspect_ipa import inspect_ipa
@@ -29,10 +30,21 @@ def smoke(ipa, bundle_id, private, output):
     runtime = max(runtimes, key=lambda r: version(r['version']))
     device = run('xcrun', 'simctl', 'create', 'Asteri CI',
                  'com.apple.CoreSimulator.SimDeviceType.iPhone-17', runtime['identifier'])
+    recorder = None
+    record_log = None
     try:
         run('xcrun', 'simctl', 'boot', device)
         run('xcrun', 'simctl', 'bootstatus', device, '-b')
         run('xcrun', 'simctl', 'install', device, str(apps[0]))
+        record_log = (output / 'simulator-recording.log').open('w')
+        recorder = subprocess.Popen(['xcrun', 'simctl', 'io', device, 'recordVideo',
+                                     '--codec=h264', '--force', str(output / 'simulator-launch.mp4')],
+                                    stdout=record_log, stderr=subprocess.STDOUT)
+        deadline = time.monotonic() + 15
+        while 'Recording started' not in (output / 'simulator-recording.log').read_text():
+            if recorder.poll() is not None or time.monotonic() > deadline:
+                raise RuntimeError('Simulator recording failed to start')
+            time.sleep(0.1)
         launch = run('xcrun', 'simctl', 'launch', device, bundle_id)
         time.sleep(6)
         processes = run('xcrun', 'simctl', 'spawn', device, 'launchctl', 'list')
@@ -47,6 +59,13 @@ def smoke(ipa, bundle_id, private, output):
             'survived_seconds': 6, 'login_tested': False, 'device_tested': False,
         }, indent=2) + '\n', encoding='utf-8')
     finally:
+        if recorder is not None:
+            recorder.send_signal(signal.SIGINT)
+            recorder.wait(timeout=20)
+        if record_log is not None:
+            record_log.close()
+        subprocess.run(['xcrun', 'simctl', 'io', device, 'screenshot',
+                        str(output / 'simulator-last-frame.png')], check=False)
         logs = subprocess.run(['xcrun', 'simctl', 'spawn', device, 'log', 'show',
                                '--last', '2m', '--style', 'compact', '--predicate',
                                'process == "Telegram"'], capture_output=True, text=True)
