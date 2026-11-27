@@ -16,6 +16,14 @@ The official `BazelLocation.py` downloads Bazel and verifies the SHA-256 in `ver
 4. Download the `asteri-unsigned-<run-id>` artifact only after the job succeeds. It contains
    `Asteri.ipa`, `SHA256SUMS`, `ipa-inspection.json`, provenance and build logs.
 
+For the standalone Sideloadly variant, also set `private_container=true`. It builds a
+separate `.sideload` bundle with its own `asteri-sideload` URL scheme and private app
+storage, without extensions, App Groups or APNs capabilities. This is an explicit build
+variant; it never silently switches an existing shared account database to a new folder.
+The application's own validated keychain group still protects credentials; passcode,
+biometric and encryption policies remain active. Physical installation must be tested
+with the owner's signing. See `features/sideload-storage.md` for its current evidence.
+
 Unsigned mode uses no certificate or provisioning profile. The explicit `UNSIGNED00`
 Team ID is a configuration sentinel, not a signing credential. Generated Bazel flags
 disable provisioning profiles and legacy signing using mechanisms present in the pinned
@@ -41,6 +49,11 @@ This path is implemented but requires real signing material for validation.
 installs and launches the app without login, records a screenshot and system logs.
 It does not establish account/messaging functionality. It chooses an available compatible
 iOS runtime instead of assuming the upstream tests' iOS 26.5 simulator exists on this image.
+Simulator builds retain normal local ad-hoc signing so their declared entitlements survive
+installation. `ios-startup.yml` can replay a verified compiled standalone simulator IPA,
+check that its signature requests no App Groups/APNs, and record the normal launch plus
+an explicitly injected missing-group failure. The delivery IPA is never changed by this
+fault-injection test; only a staging copy inside a fresh simulator is changed/re-signed.
 
 Builds are manual to limit runner use. The public repository uses standard runners; no
 paid runner or VM service is selected. Repository download archives are cached; private

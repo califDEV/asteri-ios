@@ -18,18 +18,19 @@ It requires iOS 15.0+ and signing before installation. See TEST_REPORT for exact
   Java/Xposed/ART hooks are unsupported as written; full compatibility is not claimed.
 - The published baseline retains upstream identity. The new source uses Asteri's own
   name and vector icon, omits upstream alternate app icons, and includes attribution.
-- The owner reported that the previous IPA installed but did not start. Exact symptom,
-  signing method and crash evidence are pending; no physical-device startup fix is claimed.
+- The owner reports a black screen after installing the baseline with Sideloadly on
+  iOS 27. An explicit standalone variant is implemented and its builds/launch checks
+  are running. No successful physical-device startup is claimed yet.
 - Unsigned IPA installation is not automatic. Full Telegram App Groups/extensions/push
   capabilities may not be available under a free Apple account; paid signing material
   has not been supplied. No certificate or Apple service has been purchased.
 - Push delivery also needs server-side APNs integration for the client's bundle/team;
   merely signing an app is not evidence that Telegram notifications will work.
-- `TelegramUI/Sources/AppDelegate.swift` requires `group.<bundle ID>` storage and
-  stops initialization with "Error 2" when that container is unavailable. Disabling
-  extensions alone does not remove this requirement. A free-provisioning variant
-  needs a deliberate storage/keychain design or a signer that supplies working groups;
-  no fallback or successful free-account installation is claimed.
+- The published full baseline requires `group.<bundle ID>` and stops initialization
+  when its container is unavailable. The new explicit standalone variant uses private
+  storage and its own keychain group, without extensions; normal shared-mode behavior
+  is retained. Builds and scope/launch tests are pending. Unavailable storage now has an
+  actionable error page in source; its recorded-frame verification is still pending.
 - Standard hosted runner memory/disk/time may constrain a cold build; actual logs decide
   feasibility. No paid runner or macOS VM is configured.
 - Source history is retained; the current partial local clone fetches historical blobs

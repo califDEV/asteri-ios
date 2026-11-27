@@ -35,7 +35,8 @@ def main():
     write_json(OUTPUT / 'recheck-provenance.json', {
         'parent_run': parent_run, 'app_source_commit': provenance['source_commit'],
         'test_source_commit': run('git', 'rev-parse', 'HEAD'), 'app_sha256': inspection['sha256'],
-        'compiled_app_reused_without_modification': True,
+        'delivery_ipa_reused_without_modification': True,
+        'error_case_uses_modified_staging_copy': True,
     })
     smoke(ipa, inspection['bundle_id'], PRIVATE, OUTPUT, exercise_missing_group=True)
     for stem in ('simulator-launch', 'missing-group'):
