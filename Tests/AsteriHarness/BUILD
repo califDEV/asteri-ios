@@ -8,6 +8,7 @@ plist_fragment(
     template = """
     <key>CFBundleName</key><string>Asteri Harness</string>
     <key>CFBundleDisplayName</key><string>Asteri QA</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>1.0</string>
     <key>CFBundleVersion</key><string>1</string>
     <key>UILaunchScreen</key><dict/>

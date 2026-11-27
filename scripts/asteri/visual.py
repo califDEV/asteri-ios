@@ -2,6 +2,7 @@
 """Record shipping Asteri settings rows against an empty, real preference store."""
 import json
 import os
+import plistlib
 import shutil
 import signal
 import subprocess
@@ -46,9 +47,19 @@ def main():
                '--configurationPath', str(config_path), '--buildNumber', '1',
                '--configuration', 'debug_sim_arm64', '--xcodeManagedCodesigning',
                '--target', '//Tests/AsteriHarness:AsteriHarness']
-    logged(command, 'visual-build.log', (config['api_hash'],))
+    metadata_command = command[:-1] + ['//Tests/AsteriHarness:InfoPlist']
+    logged(metadata_command, 'visual-metadata.log', (config['api_hash'],))
+    metadata = plistlib.loads((ROOT / 'bazel-bin/Tests/AsteriHarness/InfoPlist.plist').read_bytes())
+    if metadata.get('CFBundlePackageType') != 'APPL':
+        raise ValueError('Harness metadata must identify a real application before compilation')
     ipa = ROOT / 'bazel-bin/Tests/AsteriHarness/AsteriHarness.ipa'
-    inspection = inspect_ipa(ipa, 'simulator', 'org.asteri.VisualHarness', 'asteri-harness')
+    retained_ipa = OUTPUT / 'AsteriHarness.ipa'
+    try:
+        logged(command, 'visual-build.log', (config['api_hash'],))
+    finally:
+        if ipa.is_file():
+            shutil.copy2(ipa, retained_ipa)
+    inspection = inspect_ipa(retained_ipa, 'simulator', 'org.asteri.VisualHarness', 'asteri-harness')
     write_json(OUTPUT / 'harness-inspection.json', inspection)
     runtimes = json.loads(run('xcrun', 'simctl', 'list', 'runtimes', '-j'))['runtimes']
     runtime = max((r for r in runtimes if r.get('isAvailable') and '.iOS-' in r['identifier']),
