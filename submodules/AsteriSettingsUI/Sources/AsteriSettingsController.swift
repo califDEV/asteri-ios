@@ -23,21 +23,21 @@ private struct AsteriSettingsStrings {
             self.explanation = "Скрывает чрезмерные диакритические знаки и управляющие символы направления текста в сообщениях. Обычные диакритики и эмодзи сохраняются. Исходный текст для копирования и отправки не меняется."
             self.preview = "Предпросмотр"
             self.about = "О ПРИЛОЖЕНИИ"
-            self.attribution = "Asteri — независимый неофициальный клиент на основе Telegram для iOS. Функция защиты от Zalgo адаптирована из exteraGram (© exteraGram, 2022–2026), GPLv3+. Полный перенос функций и поддержка Android-плагинов пока не завершены."
+            self.attribution = "Asteri — независимый неофициальный клиент на основе Telegram для iOS и кода exteraGram. Функция защиты от Zalgo адаптирована из exteraGram (© exteraGram, 2022–2026), GPLv3+. Полный перенос функций и поддержка Android-плагинов пока не завершены."
         case "uk":
             self.general = "ТЕКСТ ПОВІДОМЛЕНЬ"
             self.filter = "Захист від Zalgo"
             self.explanation = "Приховує надмірні діакритичні знаки та керівні символи напрямку тексту в повідомленнях. Звичайні діакритики й емодзі зберігаються. Вихідний текст для копіювання та надсилання не змінюється."
             self.preview = "Попередній перегляд"
             self.about = "ПРО ЗАСТОСУНОК"
-            self.attribution = "Asteri — незалежний неофіційний клієнт на основі Telegram для iOS. Захист від Zalgo адаптовано з exteraGram (© exteraGram, 2022–2026), GPLv3+. Повне перенесення функцій і підтримка Android-плагінів ще не завершені."
+            self.attribution = "Asteri — незалежний неофіційний клієнт на основі Telegram для iOS та коду exteraGram. Захист від Zalgo адаптовано з exteraGram (© exteraGram, 2022–2026), GPLv3+. Повне перенесення функцій і підтримка Android-плагінів ще не завершені."
         default:
             self.general = "MESSAGE TEXT"
             self.filter = "Zalgo protection"
             self.explanation = "Hides excessive combining marks and text direction controls in messages. Normal accents and emoji are preserved. The original text used for copying and sending stays unchanged."
             self.preview = "Preview"
             self.about = "ABOUT"
-            self.attribution = "Asteri is an independent, unofficial client based on Telegram for iOS. Zalgo protection is adapted from exteraGram (© exteraGram, 2022–2026), GPLv3+. The full feature port and Android plugin compatibility are still in progress."
+            self.attribution = "Asteri is an independent, unofficial client based on Telegram for iOS and code from exteraGram. Zalgo protection is adapted from exteraGram (© exteraGram, 2022–2026), GPLv3+. The full feature port and Android plugin compatibility are still in progress."
         }
     }
 }
@@ -46,11 +46,13 @@ private enum AsteriSettingsEntry: ItemListNodeEntry {
     case header(Int32, String)
     case filter(String, Bool)
     case text(Int32, String)
+    case source
 
     var stableId: Int32 {
         switch self {
         case let .header(id, _), let .text(id, _): return id
         case .filter: return 1
+        case .source: return 6
         }
     }
 
@@ -71,6 +73,12 @@ private enum AsteriSettingsEntry: ItemListNodeEntry {
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: title, value: enabled, sectionId: self.section, style: .blocks, updated: update)
         case let .text(_, text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
+        case .source:
+            return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: nil, title: "exteraGram", label: "GitHub", labelStyle: .text, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
+                if let url = URL(string: "https://github.com/exteraSquad/exteraGram") {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            })
         }
     }
 }
@@ -89,6 +97,7 @@ public func asteriSettingsController(initialPresentationData: PresentationData, 
             .text(3, strings.preview + ": " + ZalgoFilter.sanitized(sample, enabled: settings.filterZalgo)),
             .header(4, strings.about),
             .text(5, strings.attribution),
+            .source,
         ]
         let controller = ItemListControllerState(presentationData: ItemListPresentationData(data), title: .text("Asteri"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: data.strings.Common_Back), animateChanges: false)
         let list = ItemListNodeState(presentationData: ItemListPresentationData(data), entries: entries, style: .blocks, emptyStateItem: nil, animateChanges: false)
