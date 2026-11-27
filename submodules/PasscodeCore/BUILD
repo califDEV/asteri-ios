@@ -19,7 +19,10 @@ swift_library(
     module_name = "PasscodeCore",
     testonly = True,
     srcs = glob(["Sources/*.swift"], exclude = ["Sources/AccountManagerIntegration.swift"]),
-    copts = ["-enable-testing", "-warnings-as-errors"],
+    # Match the upstream SwiftPM host-test policy: macOS-only legacy SecKeychain
+    # migration APIs retain visible deprecation warnings. The production iOS
+    # target above still treats every warning as an error.
+    copts = ["-enable-testing"],
     deps = ["//submodules/SSignalKit/SwiftSignalKit"],
 )
 
