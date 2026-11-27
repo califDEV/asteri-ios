@@ -32,3 +32,10 @@ These checks do not replace signing and launch tests on the owner's physical iPh
 
 Current state: implementation prepared; native scope, full build and simulator results
 must be recorded before describing the device problem as fixed.
+
+Expected recorded frames before the startup replay: normal standalone launch reaches
+the real unauthenticated application UI, with no storage warning or blank settled page.
+The injected missing-group case shows the native Asteri heading and actionable Sideload
+instruction centered inside the content band. Both scenarios use the same compiled app;
+only a staging copy is changed for the failure case, with no delivery-IPA modification.
+Labels must remain readable against the system background and not overlap or clip.
