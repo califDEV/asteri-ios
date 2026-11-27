@@ -36,7 +36,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: ios-build-${{ github.ref }}-${{ inputs.mode }}
+  group: ios-build-${{ github.ref }}-${{ inputs.mode }}-${{ inputs.private_container }}
   cancel-in-progress: false
 jobs:
   build:
